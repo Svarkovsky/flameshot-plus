@@ -77,53 +77,8 @@ jobs:
           cat SHA256SUMS.txt
           cd ..
 
-          # Generate structured release notes
-          cat << 'EOF' > release_notes.md
-## Flameshot + ${{ github.ref_name }}
-
-Lightweight, optimized screen annotation with smart window detection, default WebP capture, integrated video/audio recording, and free anonymous cloud sharing.
-
-### Key Features
-
-- **Integrated Video & Audio Recording:** Record any selected screen region or window directly into high-quality MP4 (`x264` + `AAC`) with perfect A/V synchronization. Automatic output to `~/Video/flameshot-plus/`.
-- **Pre-Record Floating HUD:** Dedicated 530px floating toolbar. Choose your audio source before recording: System Audio (auto-detects monitor sink including Bluetooth), Microphone, Mixed (System + Mic), or Muted.
-- **Window Snapping (X11):** Instant geometry detection. Double-click or press `W` / `Tab` to snap the selection box to any window under cursor.
-- **Free Anonymous Cloud Upload (0x0.st / Catbox):** Dead Imgur API keys removed. Upload any screenshot with 1-click directly to **0x0.st** with automatic fast fallback to **Catbox.moe**. Direct links copied to clipboard with notifications.
-- **Default WebP Format:** Modern, lightweight screenshot format out of the box.
-- **Maximum Build Optimization:** Compiled with `-O3`, `-flto=auto` (Link-Time Optimization), dead-code elimination (`-Wl,--gc-sections`), and `sstrip` from ELFkickers. Standalone binary is only **1.6 MB**, `.deb` package is only **650 KB**.
-- **Debian Policy Compliant:** Package provides, conflicts, and replaces stock `flameshot` for seamless zero-conflict upgrades.
-
----
-
-### Quick Installation (Debian 12 / Ubuntu)
-
-```bash
-wget https://github.com/Svarkovsky/flameshot-plus/releases/download/${{ github.ref_name }}/flameshot-plus_12.1.0-1_amd64.deb
-sudo apt install ./flameshot-plus_12.1.0-1_amd64.deb
-```
-
-Or run the standalone binary directly:
-```bash
-wget https://github.com/Svarkovsky/flameshot-plus/releases/download/${{ github.ref_name }}/flameshot-plus
-chmod +x ./flameshot-plus
-./flameshot-plus gui
-```
-
----
-
-### Verification (SHA256)
-
-Verify downloaded assets against `SHA256SUMS.txt`:
-```bash
-sha256sum -c SHA256SUMS.txt
-```
-
----
-
-### Upstream Attribution & Disclaimer
-
-All original rights, intellectual property, and authorship belong entirely to the original authors and contributors of Flameshot at [https://github.com/flameshot-org/flameshot](https://github.com/flameshot-org/flameshot). This fork is distributed AS-IS under GPLv3 without warranties of any kind.
-EOF
+          # Generate structured release notes from template
+          sed "s/\${VERSION}/${{ github.ref_name }}/g" packaging/release_notes.md.template > release_notes.md
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
