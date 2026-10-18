@@ -23,6 +23,25 @@ If you like it, you can build it, use it, and enjoy a faster, fully featured too
 
 ---
 
+## Installation & Download
+
+### Debian 12 / Ubuntu (.deb)
+
+Pre-built packages are automatically built on Debian 12 via GitHub Actions:
+1. Download `flameshot-plus_12.1.0-1_amd64.deb` from [Releases](https://github.com/Svarkovsky/flameshot-plus/releases) or [GitHub Actions](https://github.com/Svarkovsky/flameshot-plus/actions).
+2. Install via apt:
+```bash
+sudo apt install ./flameshot-plus_12.1.0-1_amd64.deb
+```
+
+Or download the standalone binary:
+```bash
+chmod +x ./flameshot-plus
+./flameshot-plus gui
+```
+
+---
+
 ## Quick Build & Run
 
 ### Prerequisites (Debian / Ubuntu)
