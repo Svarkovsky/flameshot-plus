@@ -43,6 +43,9 @@ Version: 12.1.0-1
 Section: graphics
 Priority: optional
 Architecture: amd64
+Provides: flameshot
+Conflicts: flameshot
+Replaces: flameshot
 Depends: libc6, libqt5core5a, libqt5gui5, libqt5widgets5, libqt5svg5, libqt5network5, libqt5dbus5, libx11-6, ffmpeg
 Maintainer: Svarkovsky <ivansvarkovsky@gmail.com>
 Homepage: https://github.com/Svarkovsky/flameshot-plus
@@ -51,6 +54,45 @@ Description: Powerful screen annotation, smart window snapping, and video record
  Adds integrated desktop video/audio recording to MP4, smart window
  detection, persistent area coordinates, and default WebP screenshots.
 EOF
+
+# Install copyright documentation
+mkdir -p "$STAGE_DIR/usr/share/doc/$PKG_NAME"
+if [ -f LICENSE ]; then
+    cp LICENSE "$STAGE_DIR/usr/share/doc/$PKG_NAME/copyright"
+elif [ -f ../LICENSE ]; then
+    cp ../LICENSE "$STAGE_DIR/usr/share/doc/$PKG_NAME/copyright"
+fi
+
+# Add postinst and postrm triggers for desktop and icon caches
+cat << 'EOF' > "$STAGE_DIR/DEBIAN/postinst"
+#!/bin/sh
+set -e
+if [ "$1" = "configure" ]; then
+    if command -v update-desktop-database >/dev/null 2>&1; then
+        update-desktop-database -q /usr/share/applications || true
+    fi
+    if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+        gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor || true
+    fi
+fi
+exit 0
+EOF
+chmod 755 "$STAGE_DIR/DEBIAN/postinst"
+
+cat << 'EOF' > "$STAGE_DIR/DEBIAN/postrm"
+#!/bin/sh
+set -e
+if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
+    if command -v update-desktop-database >/dev/null 2>&1; then
+        update-desktop-database -q /usr/share/applications || true
+    fi
+    if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+        gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor || true
+    fi
+fi
+exit 0
+EOF
+chmod 755 "$STAGE_DIR/DEBIAN/postrm"
 
 # Update desktop file name and exec
 if [ -f "$STAGE_DIR/usr/share/applications/org.flameshot.Flameshot.desktop" ]; then
