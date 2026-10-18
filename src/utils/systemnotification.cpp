@@ -36,7 +36,7 @@ SystemNotification::SystemNotification(QObject* parent)
 void SystemNotification::sendMessage(const QString& text,
                                      const QString& savePath)
 {
-    sendMessage(text, tr("Flameshot Info"), savePath);
+    sendMessage(text, tr("Flameshot +"), savePath);
 }
 
 void SystemNotification::sendMessage(const QString& text,
