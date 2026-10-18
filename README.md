@@ -56,8 +56,18 @@ cmake --build build -j$(nproc)
 
 ---
 
-## Support & Donate
+## Disclaimer & Upstream Authorship
+
+All original rights, intellectual property, and authorship belong entirely to the original authors and contributors of Flameshot at [https://github.com/flameshot-org/flameshot](https://github.com/flameshot-org/flameshot).
+
+This repository is an independent personal fork created solely for personal convenience. All upstream questions, feature requests, and bug reports regarding the base Flameshot application should be directed to the official project at [https://github.com/flameshot-org/flameshot](https://github.com/flameshot-org/flameshot).
+
+The author of this fork accepts absolutely NO responsibility, liability, or warranty of any kind. I am not responsible for anything; use this software strictly at your own risk.
+
+---
+
+## Sponsor & Donate
 
 If you enjoy Flameshot + and want to say thanks:
-- Check out: [https://github.com/Svarkovsky/donate](https://github.com/Svarkovsky/donate)
+- **Sponsor / Donate:** [https://svarkovsky.github.io/donate/](https://svarkovsky.github.io/donate/)
 - Support on GitHub: [@Svarkovsky](https://github.com/Svarkovsky)
