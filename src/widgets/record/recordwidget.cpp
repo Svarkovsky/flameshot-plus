@@ -299,10 +299,7 @@ void RecordWidget::onCancelClicked()
 
 void RecordWidget::startFFmpeg()
 {
-    QString baseDir = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
-    if (baseDir.isEmpty()) {
-        baseDir = QDir::homePath();
-    }
+    QString baseDir = QDir::homePath() + QStringLiteral("/Video");
     QDir().mkpath(baseDir);
 
     QString timestamp = QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd_HH-mm-ss"));
@@ -312,40 +309,76 @@ void RecordWidget::startFFmpeg()
 
     QStringList args;
     args << QStringLiteral("-y");
-    args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
-    args << QStringLiteral("-f") << QStringLiteral("x11grab");
-    args << QStringLiteral("-draw_mouse") << QStringLiteral("1");
-    args << QStringLiteral("-video_size") << QStringLiteral("%1x%2").arg(m_area.width()).arg(m_area.height());
-    args << QStringLiteral("-framerate") << QStringLiteral("30");
-    args << QStringLiteral("-i") << QStringLiteral(":0.0+%1,%2").arg(m_area.x()).arg(m_area.y());
 
-    // Audio input setup with volume boost to reference 100% and limiter
+    // Audio input setup (opened first to lock sync and start times)
     switch (m_audioMode) {
     case AudioRecordMode::SystemSound:
-        args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("1024");
         args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << activeMonitor;
-        args << QStringLiteral("-af") << QStringLiteral("volume=2.2,alimiter=limit=0.98");
+
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("1024");
+        args << QStringLiteral("-f") << QStringLiteral("x11grab");
+        args << QStringLiteral("-draw_mouse") << QStringLiteral("1");
+        args << QStringLiteral("-video_size") << QStringLiteral("%1x%2").arg(m_area.width()).arg(m_area.height());
+        args << QStringLiteral("-framerate") << QStringLiteral("30");
+        args << QStringLiteral("-i") << QStringLiteral(":0.0+%1,%2").arg(m_area.x()).arg(m_area.y());
+
+        args << QStringLiteral("-map") << QStringLiteral("1:v");
+        args << QStringLiteral("-map") << QStringLiteral("0:a");
+        args << QStringLiteral("-af") << QStringLiteral("volume=2.2,alimiter=limit=0.98,aresample=async=1000");
         break;
+
     case AudioRecordMode::Microphone:
-        args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("1024");
         args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << QStringLiteral("default");
-        args << QStringLiteral("-af") << QStringLiteral("volume=1.8,alimiter=limit=0.98");
+
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("1024");
+        args << QStringLiteral("-f") << QStringLiteral("x11grab");
+        args << QStringLiteral("-draw_mouse") << QStringLiteral("1");
+        args << QStringLiteral("-video_size") << QStringLiteral("%1x%2").arg(m_area.width()).arg(m_area.height());
+        args << QStringLiteral("-framerate") << QStringLiteral("30");
+        args << QStringLiteral("-i") << QStringLiteral(":0.0+%1,%2").arg(m_area.x()).arg(m_area.y());
+
+        args << QStringLiteral("-map") << QStringLiteral("1:v");
+        args << QStringLiteral("-map") << QStringLiteral("0:a");
+        args << QStringLiteral("-af") << QStringLiteral("volume=1.8,alimiter=limit=0.98,aresample=async=1000");
         break;
+
     case AudioRecordMode::BothMixed:
-        args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("1024");
         args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << activeMonitor;
-        args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
+
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("1024");
         args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << QStringLiteral("default");
-        args << QStringLiteral("-filter_complex") << QStringLiteral("[0:a][1:a]amix=inputs=2:duration=longest,volume=2.2,alimiter=limit=0.98[aout]");
-        args << QStringLiteral("-map") << QStringLiteral("0:v") << QStringLiteral("-map") << QStringLiteral("[aout]");
+
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("1024");
+        args << QStringLiteral("-f") << QStringLiteral("x11grab");
+        args << QStringLiteral("-draw_mouse") << QStringLiteral("1");
+        args << QStringLiteral("-video_size") << QStringLiteral("%1x%2").arg(m_area.width()).arg(m_area.height());
+        args << QStringLiteral("-framerate") << QStringLiteral("30");
+        args << QStringLiteral("-i") << QStringLiteral(":0.0+%1,%2").arg(m_area.x()).arg(m_area.y());
+
+        args << QStringLiteral("-filter_complex")
+             << QStringLiteral("[0:a][1:a]amix=inputs=2:duration=longest,volume=2.2,alimiter=limit=0.98,aresample=async=1000[aout]");
+        args << QStringLiteral("-map") << QStringLiteral("2:v");
+        args << QStringLiteral("-map") << QStringLiteral("[aout]");
         break;
+
     case AudioRecordMode::Muted:
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("1024");
+        args << QStringLiteral("-f") << QStringLiteral("x11grab");
+        args << QStringLiteral("-draw_mouse") << QStringLiteral("1");
+        args << QStringLiteral("-video_size") << QStringLiteral("%1x%2").arg(m_area.width()).arg(m_area.height());
+        args << QStringLiteral("-framerate") << QStringLiteral("30");
+        args << QStringLiteral("-i") << QStringLiteral(":0.0+%1,%2").arg(m_area.x()).arg(m_area.y());
+        args << QStringLiteral("-map") << QStringLiteral("0:v");
         break;
     }
 
+    // High quality video settings: veryfast + crf 18 (visually crisp)
     args << QStringLiteral("-c:v") << QStringLiteral("libx264");
-    args << QStringLiteral("-preset") << QStringLiteral("ultrafast");
-    args << QStringLiteral("-crf") << QStringLiteral("23");
+    args << QStringLiteral("-preset") << QStringLiteral("veryfast");
+    args << QStringLiteral("-crf") << QStringLiteral("18");
     args << QStringLiteral("-pix_fmt") << QStringLiteral("yuv420p");
 
     if (m_audioMode != AudioRecordMode::Muted) {
