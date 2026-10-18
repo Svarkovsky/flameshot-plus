@@ -13,8 +13,31 @@ permissions:
   packages: write
 
 jobs:
+  static-code-analysis:
+    name: Static Code Analysis (cppcheck)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install cppcheck
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cppcheck
+
+      - name: Run cppcheck Static Analysis
+        run: |
+          cppcheck --enable=warning,performance,portability \
+                   --inline-suppr \
+                   --suppress=missingIncludeSystem \
+                   --error-exitcode=1 \
+                   src/utils/confighandler.cpp \
+                   src/tools/imgupload/storages/nullpointer/ \
+                   src/tools/record/
+
   build-debian12:
     name: Build Debian 12 (bookworm) amd64 .deb
+    needs: static-code-analysis
     runs-on: ubuntu-latest
     container:
       image: debian:bookworm-slim
@@ -35,7 +58,9 @@ jobs:
             libx11-dev \
             ffmpeg \
             dpkg-dev \
-            wget
+            wget \
+            xvfb \
+            xdotool
 
       - name: Checkout repository
         uses: actions/checkout@v4
