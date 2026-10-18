@@ -4,8 +4,8 @@ cmake_policy(SET CMP0069 NEW)
 
 set(FLAMESHOT_VERSION 12.1.0)
 
-# Flameshot-org
-set(GIT_API_URL "https://api.github.com/repos/flameshot-org/flameshot/releases/latest")
+# Flameshot +
+set(GIT_API_URL "https://api.github.com/repos/Svarkovsky/flameshot-plus/releases/latest")
 # Namecheap
 # set(GIT_API_URL "https://api.github.com/repos/namecheap/flameshot/releases/latest")
 

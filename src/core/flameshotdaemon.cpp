@@ -171,41 +171,15 @@ void FlameshotDaemon::sendTrayNotification(const QString& text,
 
 void FlameshotDaemon::showUpdateNotificationIfAvailable(CaptureWidget* widget)
 {
-    if (!m_appLatestUrl.isEmpty() &&
-        ConfigHandler().ignoreUpdateToVersion().compare(m_appLatestVersion) <
-          0) {
-        widget->showAppUpdateNotification(m_appLatestVersion, m_appLatestUrl);
-    }
+    Q_UNUSED(widget);
 }
 
 void FlameshotDaemon::getLatestAvailableVersion()
 {
-    // This features is required for MacOS and Windows user and for Linux users
-    // who installed Flameshot not from the repository.
-    m_networkCheckUpdates = new QNetworkAccessManager(this);
-    QNetworkRequest requestCheckUpdates(QUrl(FLAMESHOT_APP_VERSION_URL));
-    connect(m_networkCheckUpdates,
-            &QNetworkAccessManager::finished,
-            this,
-            &FlameshotDaemon::handleReplyCheckUpdates);
-    m_networkCheckUpdates->get(requestCheckUpdates);
-
-    // check for updates each 24 hours
-    QTimer::singleShot(1000 * 60 * 60 * 24, [this]() {
-        if (ConfigHandler().checkForUpdates()) {
-            this->getLatestAvailableVersion();
-        }
-    });
 }
 
 void FlameshotDaemon::checkForUpdates()
 {
-    if (m_appLatestUrl.isEmpty()) {
-        m_showCheckAppUpdateStatus = true;
-        getLatestAvailableVersion();
-    } else {
-        QDesktopServices::openUrl(QUrl(m_appLatestUrl));
-    }
 }
 
 /**
@@ -346,41 +320,7 @@ void FlameshotDaemon::enableTrayIcon(bool enable)
 
 void FlameshotDaemon::handleReplyCheckUpdates(QNetworkReply* reply)
 {
-    if (!ConfigHandler().checkForUpdates()) {
-        return;
-    }
-    if (reply->error() == QNetworkReply::NoError) {
-        QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject json = response.object();
-        m_appLatestVersion = json["tag_name"].toString().replace("v", "");
-
-        QVersionNumber appLatestVersion =
-          QVersionNumber::fromString(m_appLatestVersion);
-        if (Flameshot::instance()->getVersion() < appLatestVersion) {
-            emit newVersionAvailable(appLatestVersion);
-            m_appLatestUrl = json["html_url"].toString();
-            QString newVersion =
-              tr("New version %1 is available").arg(m_appLatestVersion);
-            if (m_showCheckAppUpdateStatus) {
-                sendTrayNotification(newVersion, "Flameshot");
-                QDesktopServices::openUrl(QUrl(m_appLatestUrl));
-            }
-        } else if (m_showCheckAppUpdateStatus) {
-            sendTrayNotification(tr("You have the latest version"),
-                                 "Flameshot");
-        }
-    } else {
-        qWarning() << "Failed to get information about the latest version. "
-                   << reply->errorString();
-        if (m_showCheckAppUpdateStatus) {
-            if (FlameshotDaemon::instance()) {
-                FlameshotDaemon::instance()->sendTrayNotification(
-                  tr("Failed to get information about the latest version."),
-                  "Flameshot");
-            }
-        }
-    }
-    m_showCheckAppUpdateStatus = false;
+    Q_UNUSED(reply);
 }
 
 QDBusMessage FlameshotDaemon::createMethodCall(QString method)

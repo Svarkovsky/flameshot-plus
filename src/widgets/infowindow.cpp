@@ -14,6 +14,7 @@ InfoWindow::InfoWindow(QWidget* parent)
   , ui(new Ui::InfoWindow)
 {
     ui->setupUi(this);
+    setWindowTitle(tr("About Flameshot +"));
     setAttribute(Qt::WA_DeleteOnClose);
 
     ui->IconSVG->setPixmap(QPixmap(GlobalValues::iconPath()));
@@ -53,5 +54,7 @@ QString generateKernelString()
 void InfoWindow::on_CopyInfoButton_clicked()
 {
     FlameshotDaemon::copyToClipboard(GlobalValues::versionInfo() + "\n" +
-                                     generateKernelString());
+                                     generateKernelString() +
+                                     "\nRepository: https://github.com/Svarkovsky/flameshot-plus" +
+                                     "\nSupport: https://github.com/Svarkovsky/donate");
 }
