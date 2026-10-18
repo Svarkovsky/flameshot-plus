@@ -33,10 +33,25 @@ jobs:
             qttools5-dev-tools \
             libx11-dev \
             ffmpeg \
-            dpkg-dev
+            dpkg-dev \
+            wget
 
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Build sstrip from ELFkickers
+        run: |
+          mkdir -p tools
+          cd tools
+          wget -q http://www.muppetlabs.com/~breadbox/pub/software/ELFkickers-3.2.tar.gz || curl -sSL http://www.muppetlabs.com/~breadbox/pub/software/ELFkickers-3.2.tar.gz -o ELFkickers-3.2.tar.gz
+          if [ -f ELFkickers-3.2.tar.gz ]; then
+            tar -xf ELFkickers-3.2.tar.gz
+            cd ELFkickers-3.2/elfrw && make libelfrw.a
+            cd ../sstrip && gcc -O2 -I../elfrw sstrip.c ../elfrw/libelfrw.a -o ../../sstrip
+            cd ../..
+            rm -rf tools/ELFkickers-3.2 tools/ELFkickers-3.2.tar.gz
+            chmod +x tools/sstrip
+          fi
 
       - name: Configure CMake
         run: |
@@ -52,7 +67,10 @@ jobs:
         run: |
           mkdir -p release-artifacts
           ./packaging/build_deb.sh build ./release-artifacts
-          strip build/src/flameshot -o ./release-artifacts/flameshot-plus
+          strip -s -R .comment -R .note -R .note.gnu.build-id -R .note.ABI-tag build/src/flameshot -o ./release-artifacts/flameshot-plus
+          if [ -x tools/sstrip ]; then
+            ./tools/sstrip ./release-artifacts/flameshot-plus || true
+          fi
           chmod +x ./release-artifacts/flameshot-plus
 
       - name: Upload build artifacts

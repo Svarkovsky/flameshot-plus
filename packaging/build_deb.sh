@@ -26,7 +26,12 @@ if [ -d "$STAGE_DIR/usr/local" ]; then
 fi
 
 if [ -f "$STAGE_DIR/usr/bin/flameshot" ]; then
-    strip "$STAGE_DIR/usr/bin/flameshot"
+    strip -s -R .comment -R .note -R .note.gnu.build-id -R .note.ABI-tag "$STAGE_DIR/usr/bin/flameshot"
+    if [ -x tools/sstrip ]; then
+        tools/sstrip "$STAGE_DIR/usr/bin/flameshot" || true
+    elif command -v sstrip >/dev/null 2>&1; then
+        sstrip "$STAGE_DIR/usr/bin/flameshot" || true
+    fi
     ln -sf flameshot "$STAGE_DIR/usr/bin/flameshot-plus"
 fi
 
