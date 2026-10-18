@@ -1,0 +1,73 @@
+name: Build & Package (Debian 12 .deb)
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-debian12:
+    name: Build Debian 12 (bookworm) amd64 .deb
+    runs-on: ubuntu-latest
+    container:
+      image: debian:bookworm-slim
+
+    steps:
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            build-essential \
+            cmake \
+            git \
+            ca-certificates \
+            qtbase5-dev \
+            libqt5svg5-dev \
+            qttools5-dev-tools \
+            libx11-dev \
+            ffmpeg \
+            dpkg-dev
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -S . \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DENABLE_IPO=ON
+
+      - name: Build binary
+        run: cmake --build build -j$(nproc)
+
+      - name: Build Debian package
+        run: |
+          mkdir -p release-artifacts
+          ./packaging/build_deb.sh build ./release-artifacts
+          strip build/src/flameshot -o ./release-artifacts/flameshot-plus
+          chmod +x ./release-artifacts/flameshot-plus
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: flameshot-plus-debian12-amd64
+          path: |
+            release-artifacts/*.deb
+            release-artifacts/flameshot-plus
+
+      - name: Release assets (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-artifacts/*.deb
+            release-artifacts/flameshot-plus
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
