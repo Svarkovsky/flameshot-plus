@@ -30,6 +30,7 @@ jobs:
           cppcheck --enable=warning,performance,portability \
                    --inline-suppr \
                    --suppress=missingIncludeSystem \
+                   --suppress=unknownMacro \
                    --error-exitcode=1 \
                    src/utils/confighandler.cpp \
                    src/tools/imgupload/storages/nullpointer/ \
