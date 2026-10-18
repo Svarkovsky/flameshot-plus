@@ -7,6 +7,9 @@ PKG_NAME="flameshot-plus"
 VERSION="12.1.0-1"
 ARCH="amd64"
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
 STAGE_DIR=$(mktemp -d -t flameshot-deb-XXXXXX)
 trap 'rm -rf "$STAGE_DIR"' EXIT
 
@@ -57,10 +60,10 @@ EOF
 
 # Install copyright documentation
 mkdir -p "$STAGE_DIR/usr/share/doc/$PKG_NAME"
-if [ -f LICENSE ]; then
+if [ -f "$REPO_ROOT/LICENSE" ]; then
+    cp "$REPO_ROOT/LICENSE" "$STAGE_DIR/usr/share/doc/$PKG_NAME/copyright"
+elif [ -f LICENSE ]; then
     cp LICENSE "$STAGE_DIR/usr/share/doc/$PKG_NAME/copyright"
-elif [ -f ../LICENSE ]; then
-    cp ../LICENSE "$STAGE_DIR/usr/share/doc/$PKG_NAME/copyright"
 fi
 
 # Add postinst and postrm triggers for desktop and icon caches
