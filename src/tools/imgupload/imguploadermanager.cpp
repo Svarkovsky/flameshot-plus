@@ -8,44 +8,26 @@
 
 // TODO - remove this hard-code and create plugin manager in the future, you may
 // include other storage headers here
-#include "storages/imgur/imguruploader.h"
+#include "storages/nullpointer/nullpointeruploader.h"
 
 ImgUploaderManager::ImgUploaderManager(QObject* parent)
   : QObject(parent)
   , m_imgUploaderBase(nullptr)
 {
-    // TODO - implement ImgUploader for other Storages and selection among them
-    m_imgUploaderPlugin = IMG_UPLOADER_STORAGE_DEFAULT;
+    m_imgUploaderPlugin = QStringLiteral("0x0.st");
     init();
 }
 
 void ImgUploaderManager::init()
 {
-    // TODO - implement ImgUploader for other Storages and selection among them,
-    // example:
-    // if (uploaderPlugin().compare("s3") == 0) {
-    //    m_qstrUrl = ImgS3Settings().value("S3", "S3_URL").toString();
-    //} else {
-    //    m_qstrUrl = "https://imgur.com/";
-    //    m_imgUploaderPlugin = "imgur";
-    //}
-    m_urlString = "https://imgur.com/";
-    m_imgUploaderPlugin = "imgur";
+    m_urlString = QStringLiteral("https://0x0.st/");
+    m_imgUploaderPlugin = QStringLiteral("0x0.st");
 }
 
 ImgUploaderBase* ImgUploaderManager::uploader(const QPixmap& capture,
                                               QWidget* parent)
 {
-    // TODO - implement ImgUploader for other Storages and selection among them,
-    // example:
-    // if (uploaderPlugin().compare("s3") == 0) {
-    //    m_imgUploaderBase =
-    //      (ImgUploaderBase*)(new ImgS3Uploader(capture, parent));
-    //} else {
-    //    m_imgUploaderBase =
-    //      (ImgUploaderBase*)(new ImgurUploader(capture, parent));
-    //}
-    m_imgUploaderBase = (ImgUploaderBase*)(new ImgurUploader(capture, parent));
+    m_imgUploaderBase = (ImgUploaderBase*)(new NullPointerUploader(capture, parent));
     if (m_imgUploaderBase && !capture.isNull()) {
         m_imgUploaderBase->upload();
     }
