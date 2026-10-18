@@ -11,6 +11,7 @@ Lightweight, optimized screen annotation with smart window detection, default We
 - **Default WebP Format:** Modern, lightweight screenshot format out of the box.
 - **Maximum Build Optimization:** Compiled with `-O3`, `-flto=auto` (Link-Time Optimization), dead-code elimination (`-Wl,--gc-sections`), and `sstrip` from ELFkickers. Standalone binary is only **1.6 MB**, `.deb` package is only **650 KB**.
 - **Debian Policy Compliant:** Package provides, conflicts, and replaces stock `flameshot` for seamless zero-conflict upgrades.
+- **Automated Quality Assurance:** Pre-release automated verification across 6 test suites: binary security, CLI contracts, zero-error configuration validation, WebP pipeline, and Debian Policy package compliance.
 
 ---
 

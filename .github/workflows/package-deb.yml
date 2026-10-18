@@ -80,6 +80,11 @@ jobs:
           # Generate structured release notes from template
           sed "s/\${VERSION}/${{ github.ref_name }}/g" packaging/release_notes.md.template > release_notes.md
 
+      - name: Run Quality Assurance & Integrity Test Suite
+        run: |
+          chmod +x ./tests/run_all_tests.sh
+          ./tests/run_all_tests.sh ./release-artifacts/flameshot-plus ./release-artifacts
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
