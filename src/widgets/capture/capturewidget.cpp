@@ -687,9 +687,11 @@ void CaptureWidget::mouseDoubleClickEvent(QMouseEvent* event)
         // Double-click outside current selection: detect window under cursor
         QRect winGeom;
         QString title, appClass;
-        if (WindowDetector::detectWindowAt(event->pos(), winGeom, title, appClass)) {
+        QPoint globalPos = mapToGlobal(event->pos());
+        if (WindowDetector::detectWindowAt(globalPos, winGeom, title, appClass)) {
+            QRect localGeom(mapFromGlobal(winGeom.topLeft()), winGeom.size());
             m_selection->setVisible(true);
-            m_selection->setGeometry(winGeom);
+            m_selection->setGeometry(localGeom);
             emit m_selection->geometrySettled();
             return;
         }
@@ -849,9 +851,11 @@ void CaptureWidget::keyPressEvent(QKeyEvent* e)
     if (e->key() == Qt::Key_W || e->key() == Qt::Key_Tab) {
         QRect winGeom;
         QString title, appClass;
-        if (WindowDetector::detectWindowAt(m_context.mousePos, winGeom, title, appClass)) {
+        QPoint globalPos = mapToGlobal(m_context.mousePos);
+        if (WindowDetector::detectWindowAt(globalPos, winGeom, title, appClass)) {
+            QRect localGeom(mapFromGlobal(winGeom.topLeft()), winGeom.size());
             m_selection->setVisible(true);
-            m_selection->setGeometry(winGeom);
+            m_selection->setGeometry(localGeom);
             emit m_selection->geometrySettled();
             return;
         }
@@ -1110,18 +1114,19 @@ void CaptureWidget::initSelection()
 
             // Export active area geometry to memory/environment files
             QRect geom = m_selection->geometry();
+            QRect globalGeom(mapToGlobal(geom.topLeft()), geom.size());
             QFile envFile(QStringLiteral("/tmp/screenink_area.env"));
             if (envFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
                 QTextStream out(&envFile);
-                out << "SCREENINK_X=" << geom.x() << "\n"
-                    << "SCREENINK_Y=" << geom.y() << "\n"
-                    << "SCREENINK_WIDTH=" << geom.width() << "\n"
-                    << "SCREENINK_HEIGHT=" << geom.height() << "\n";
+                out << "SCREENINK_X=" << globalGeom.x() << "\n"
+                    << "SCREENINK_Y=" << globalGeom.y() << "\n"
+                    << "SCREENINK_WIDTH=" << globalGeom.width() << "\n"
+                    << "SCREENINK_HEIGHT=" << globalGeom.height() << "\n";
             }
             QFile txtFile(QStringLiteral("/tmp/screenink_area.txt"));
             if (txtFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
                 QTextStream out(&txtFile);
-                out << geom.width() << "x" << geom.height() << "+" << geom.x() << "+" << geom.y() << "\n";
+                out << globalGeom.width() << "x" << globalGeom.height() << "+" << globalGeom.x() << "+" << globalGeom.y() << "\n";
             }
         } else {
             m_buttonHandler->hide();
@@ -1257,7 +1262,8 @@ void CaptureWidget::handleToolSignal(CaptureTool::Request r)
             if (!geom.isValid() || geom.width() < 16 || geom.height() < 16) {
                 geom = rect();
             }
-            RecordWidget::startRecording(geom, true);
+            QRect globalGeom(mapToGlobal(geom.topLeft()), geom.size());
+            RecordWidget::startRecording(globalGeom);
             break;
         }
         default:

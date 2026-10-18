@@ -96,6 +96,7 @@ int main(int argc, char* argv[])
     qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
     QCoreApplication::setApplicationVersion(APP_VERSION);
     QCoreApplication::setApplicationName(QStringLiteral("flameshot"));
+    QGuiApplication::setApplicationDisplayName(QStringLiteral("Flameshot +"));
     QCoreApplication::setOrganizationName(QStringLiteral("flameshot"));
 
     // no arguments, just launch Flameshot
