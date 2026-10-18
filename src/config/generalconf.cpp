@@ -49,7 +49,6 @@ GeneralConf::GeneralConf(QWidget* parent)
     initSaveAfterCopy();
     initUploadHistoryMax();
     initUndoLimit();
-    initUploadClientSecret();
     initAllowMultipleGuiInstances();
 #if !defined(Q_OS_WIN)
     initAutoCloseIdleDaemon();
@@ -537,28 +536,10 @@ void GeneralConf::initUploadHistoryMax()
 
 void GeneralConf::initUploadClientSecret()
 {
-    auto* box = new QGroupBox(tr("Imgur Application Client ID"));
-    box->setFlat(true);
-    m_layout->addWidget(box);
-
-    auto* vboxLayout = new QVBoxLayout();
-    box->setLayout(vboxLayout);
-
-    m_uploadClientKey = new QLineEdit(this);
-    QString foreground = this->palette().windowText().color().name();
-    m_uploadClientKey->setStyleSheet(
-      QStringLiteral("color: %1").arg(foreground));
-    m_uploadClientKey->setText(ConfigHandler().uploadClientSecret());
-    connect(m_uploadClientKey,
-            SIGNAL(editingFinished()),
-            this,
-            SLOT(uploadClientKeyEdited()));
-    vboxLayout->addWidget(m_uploadClientKey);
 }
 
 void GeneralConf::uploadClientKeyEdited()
 {
-    ConfigHandler().setUploadClientSecret(m_uploadClientKey->text());
 }
 
 void GeneralConf::uploadHistoryMaxChanged(int max)

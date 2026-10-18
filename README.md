@@ -19,7 +19,8 @@ If you like it, you can build it, use it, and enjoy a faster, fully featured too
 - **Window Snapping (X11):** Instant window geometry detection. Double-click any window (or press `W` / `Tab`) to automatically snap the selection frame to that exact application window.
 - **Persistent Area Coordinates:** Selection geometry is automatically saved to `/tmp/screenink_area.env` and `/tmp/screenink_area.txt` for scripting and external tools.
 - **Default WebP Format:** Ultra-lightweight screenshots saved directly in modern WebP format by default.
-- **Maximum Build Optimization:** Fully compiled with `-O3`, `-flto=auto` (Link-Time Optimization), `-fno-plt`, `-fomit-frame-pointer`, and linker dead-code elimination (`-Wl,--gc-sections`). Resulting stripped binary is only **1.6 MB**.
+- **Free Anonymous Cloud Upload (0x0.st / Catbox):** Dead, rate-limited Imgur integration and API key prompts have been completely removed. Upload any screenshot with 1-click directly to **0x0.st** with seamless automatic fallback to **Catbox.moe**. Direct links are instantly copied to your clipboard with desktop notifications. No registration, zero API keys, no tracking.
+- **Maximum Build Optimization:** Fully compiled with `-O3`, `-flto=auto` (Link-Time Optimization), `-fno-plt`, `-fomit-frame-pointer`, linker dead-code elimination (`-Wl,--gc-sections`), and `sstrip` from ELFkickers. Resulting stripped binary is only **1.6 MB**.
 
 ---
 
@@ -28,14 +29,16 @@ If you like it, you can build it, use it, and enjoy a faster, fully featured too
 ### Debian 12 / Ubuntu (.deb)
 
 Pre-built packages are automatically built on Debian 12 via GitHub Actions:
-1. Download `flameshot-plus_12.1.0-1_amd64.deb` from [Releases](https://github.com/Svarkovsky/flameshot-plus/releases) or [GitHub Actions](https://github.com/Svarkovsky/flameshot-plus/actions).
+1. Download `flameshot-plus_12.1.0-1_amd64.deb` from [Release v12.1.0-plus](https://github.com/Svarkovsky/flameshot-plus/releases/tag/v12.1.0-plus).
 2. Install via apt:
 ```bash
+wget https://github.com/Svarkovsky/flameshot-plus/releases/download/v12.1.0-plus/flameshot-plus_12.1.0-1_amd64.deb
 sudo apt install ./flameshot-plus_12.1.0-1_amd64.deb
 ```
 
 Or download the standalone binary:
 ```bash
+wget https://github.com/Svarkovsky/flameshot-plus/releases/download/v12.1.0-plus/flameshot-plus
 chmod +x ./flameshot-plus
 ./flameshot-plus gui
 ```
