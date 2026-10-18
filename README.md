@@ -20,20 +20,20 @@ If you like it, you can build it, use it, and enjoy a faster, fully featured too
 - **Persistent Area Coordinates:** Selection geometry is automatically saved to `/tmp/screenink_area.env` and `/tmp/screenink_area.txt` for scripting and external tools.
 - **Default WebP Format:** Ultra-lightweight screenshots saved directly in modern WebP format by default.
 - **Free Anonymous Cloud Upload (0x0.st / Catbox):** Dead, rate-limited Imgur integration and API key prompts have been completely removed. Upload any screenshot with 1-click directly to **0x0.st** with seamless automatic fallback to **Catbox.moe**. Direct links are instantly copied to your clipboard with desktop notifications. No registration, zero API keys, no tracking.
-- **Maximum Build Optimization:** Fully compiled with `-O3`, `-flto=auto` (Link-Time Optimization), `-fno-plt`, `-fomit-frame-pointer`, linker dead-code elimination (`-Wl,--gc-sections`), and `sstrip` from ELFkickers. Resulting stripped binary is only **1.6 MB**.
+- **Build Optimization:** Compiled with `-O3`, `-flto=auto` (Link-Time Optimization), and linker dead-code elimination (`-Wl,--gc-sections`). Resulting stripped binary is ~**1.6 MB**.
 
 ---
 
-## Rigorous Quality Assurance, Deep Code Audit & Automated Testing
+## Quality Assurance & Automated Testing
 
-This fork is **not** an ad-hoc collection of cosmetic patches or casual tweaks. Every enhancement and refactoring step is backed by rigorous architectural analysis, root-cause bug diagnosis, and a comprehensive multi-tier automated test suite integrated into CI/CD.
+All modifications are backed by automated tests integrated into GitHub Actions CI/CD to ensure stability and proper packaging.
 
-### What Was Audited & Solved
+### Codebase Changes & Packaging Details
 
-- **Root-Cause Config & Shortcut Bug Elimination:** Diagnosed and fixed the legacy configuration crash bug where unmapped tool identifiers silently caused `assertKeyRecognized()` to trigger false error states and lock the configuration UI (`"Configuration file contains errors"` banner).
-- **Dead Third-Party Code Purge:** Cleanly removed broken, rate-limited Imgur API keys, background telemetry pings to `flameshot-org`, and dead network calls. Replaced with clean, non-tracking, anonymous `0x0.st` cloud uploading with automatic `Catbox.moe` zero-error fallback.
-- **Debian Policy Compliance Audit:** Unlike generic forks, packages are engineered with standard Debian packaging rules (`Provides: flameshot`, `Conflicts: flameshot`, `Replaces: flameshot`), ensuring seamless 1-command upgrades without dpkg file collisions. Complete `/usr/share/doc/flameshot-plus/copyright` and `postinst`/`postrm` desktop/icon cache hooks are embedded.
-- **Deep Binary Hardening & Size Optimization:** Compiled with full Link-Time Optimization (`-flto=auto`), linker dead-code stripping (`-Wl,--gc-sections`), non-executable stack verification (`GNU_STACK`), and section table removal via `sstrip` from ELFkickers. The resulting binary is reduced from **49.4 MB** to **1.6 MB** without sacrificing functionality.
+- **Integrated Tool Shortcuts:** Properly registered all new tool identifiers (`TYPE_RECORD`) in Flameshot's shortcut table to ensure compatibility with the internal configuration validator (`config --check`).
+- **Anonymous Uploading:** Replaced deprecated Imgur integration with anonymous uploads to `0x0.st` and automatic fallback to `Catbox.moe`.
+- **Debian Packaging:** Built according to Debian packaging standards with `Provides: flameshot`, `Conflicts: flameshot`, and `Replaces: flameshot` for seamless package replacement. Includes `/usr/share/doc/flameshot-plus/copyright` and `postinst`/`postrm` desktop/icon cache hooks.
+- **Build Hardening:** Compiled with `-flto=auto`, linker garbage collection, and non-executable stack verification (`GNU_STACK`).
 
 ### Multi-Tier Automated Test Suite (Run on Every CI Build)
 

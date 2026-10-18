@@ -9,7 +9,7 @@ Lightweight, optimized screen annotation with smart window detection, default We
 - **Window Snapping (X11):** Instant geometry detection. Double-click or press `W` / `Tab` to snap the selection box to any window under cursor.
 - **Free Anonymous Cloud Upload (0x0.st / Catbox):** Dead Imgur API keys removed. Upload any screenshot with 1-click directly to **0x0.st** with automatic fast fallback to **Catbox.moe**. Direct links copied to clipboard with notifications.
 - **Default WebP Format:** Modern, lightweight screenshot format out of the box.
-- **Maximum Build Optimization:** Compiled with `-O3`, `-flto=auto` (Link-Time Optimization), dead-code elimination (`-Wl,--gc-sections`), and `sstrip` from ELFkickers. Standalone binary is only **1.6 MB**, `.deb` package is only **650 KB**.
+- **Build Optimization:** Compiled with `-O3`, `-flto=auto` (Link-Time Optimization), and dead-code elimination (`-Wl,--gc-sections`). Standalone binary is ~**1.6 MB**, `.deb` package is ~**670 KB**.
 - **Debian Policy Compliant:** Package provides, conflicts, and replaces stock `flameshot` for seamless zero-conflict upgrades.
 - **Automated Quality Assurance:** Pre-release automated verification across 10 test suites: cppcheck static analysis, virtual display Xvfb GUI lifecycle, concurrency safety, malformed geometry protection, binary security, zero-error configuration validation, and Debian Policy compliance.
 
