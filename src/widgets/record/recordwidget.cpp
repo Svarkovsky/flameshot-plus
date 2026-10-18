@@ -10,8 +10,72 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QRegExp>
 #include <QScreen>
 #include <QStandardPaths>
+
+static QString getActiveMonitorSource()
+{
+    // 1. Try finding active sink from playing streams (Corked: no)
+    QProcess p;
+    p.start(QStringLiteral("pactl"), QStringList() << QStringLiteral("list") << QStringLiteral("sink-inputs"));
+    if (p.waitForFinished(1000)) {
+        QString out = QString::fromUtf8(p.readAllStandardOutput());
+        QString currentSink;
+        bool isUncorked = false;
+        const QStringList lines = out.split(QLatin1Char('\n'));
+        for (const QString& line : lines) {
+            QString trimmed = line.trimmed();
+            if (trimmed.startsWith(QLatin1String("Sink: "))) {
+                currentSink = trimmed.mid(6).trimmed();
+            } else if (trimmed == QLatin1String("Corked: no")) {
+                isUncorked = true;
+                break;
+            } else if (trimmed.startsWith(QLatin1String("Sink Input #"))) {
+                currentSink.clear();
+                isUncorked = false;
+            }
+        }
+        if (isUncorked && !currentSink.isEmpty()) {
+            QProcess p2;
+            p2.start(QStringLiteral("pactl"), QStringList() << QStringLiteral("list") << QStringLiteral("short") << QStringLiteral("sinks"));
+            if (p2.waitForFinished(1000)) {
+                QString sinksOut = QString::fromUtf8(p2.readAllStandardOutput());
+                for (const QString& sline : sinksOut.split(QLatin1Char('\n'))) {
+                    QStringList parts = sline.split(QRegExp(QStringLiteral("\\s+")), Qt::SkipEmptyParts);
+                    if (parts.size() >= 2 && parts[0] == currentSink) {
+                        return parts[1] + QStringLiteral(".monitor");
+                    }
+                }
+            }
+        }
+    }
+
+    // 2. Check if a bluetooth sink exists (often preferred on Linux desktops)
+    QProcess pBt;
+    pBt.start(QStringLiteral("pactl"), QStringList() << QStringLiteral("list") << QStringLiteral("short") << QStringLiteral("sinks"));
+    if (pBt.waitForFinished(1000)) {
+        QString sinksOut = QString::fromUtf8(pBt.readAllStandardOutput());
+        for (const QString& sline : sinksOut.split(QLatin1Char('\n'))) {
+            QStringList parts = sline.split(QRegExp(QStringLiteral("\\s+")), Qt::SkipEmptyParts);
+            if (parts.size() >= 2 && parts[1].startsWith(QLatin1String("bluez_output"))) {
+                return parts[1] + QStringLiteral(".monitor");
+            }
+        }
+    }
+
+    // 3. Fallback to default sink monitor
+    QProcess pDef;
+    pDef.start(QStringLiteral("pactl"), QStringList() << QStringLiteral("get-default-sink"));
+    if (pDef.waitForFinished(1000)) {
+        QString defSink = QString::fromUtf8(pDef.readAllStandardOutput()).trimmed();
+        if (!defSink.isEmpty()) {
+            return defSink + QStringLiteral(".monitor");
+        }
+    }
+
+    return QStringLiteral("@DEFAULT_MONITOR@");
+}
 
 RecordWidget::RecordWidget(const QRect& captureArea, AudioRecordMode audioMode, QWidget* parent)
     : QWidget(parent, Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint)
@@ -71,18 +135,19 @@ void RecordWidget::initControlBar()
         "RecordWidget { "
         "   background-color: #1a1e28; "
         "   border: 2px solid #ef4444; "
-        "   border-radius: 10px; "
+        "   border-radius: 12px; "
         "} "
         "QLabel { "
         "   background: transparent; "
         "} "
         "QPushButton { "
-        "   padding: 6px 12px; "
-        "   border-radius: 6px; "
+        "   padding: 7px 14px; "
+        "   border-radius: 8px; "
         "   font-weight: bold; "
         "   font-size: 13px; "
         "   border: none; "
         "   cursor: pointer; "
+        "   white-space: nowrap; "
         "} "
         "QPushButton:hover { "
         "   opacity: 0.9; "
@@ -90,23 +155,27 @@ void RecordWidget::initControlBar()
     );
 
     auto* layout = new QHBoxLayout(this);
-    layout->setContentsMargins(12, 6, 12, 6);
-    layout->setSpacing(10);
+    layout->setContentsMargins(14, 6, 14, 6);
+    layout->setSpacing(12);
 
-    m_recDotLabel = new QLabel("● REC", this);
-    m_recDotLabel->setStyleSheet("color: #ef4444; font-weight: bold; font-size: 13px;");
+    m_recDotLabel = new QLabel(QStringLiteral("● REC"), this);
+    m_recDotLabel->setStyleSheet(QStringLiteral("color: #ef4444; font-weight: bold; font-size: 13px;"));
+    m_recDotLabel->setFixedWidth(55);
     layout->addWidget(m_recDotLabel);
 
-    m_timeLabel = new QLabel("00:00", this);
-    m_timeLabel->setStyleSheet("color: #ffffff; font-family: monospace; font-size: 15px; font-weight: bold;");
+    m_timeLabel = new QLabel(QStringLiteral("00:00"), this);
+    m_timeLabel->setStyleSheet(QStringLiteral("color: #ffffff; font-family: monospace; font-size: 15px; font-weight: bold;"));
+    m_timeLabel->setFixedWidth(60);
     layout->addWidget(m_timeLabel);
 
     m_audioButton = new QPushButton(this);
+    m_audioButton->setMinimumWidth(180);
     connect(m_audioButton, &QPushButton::clicked, this, &RecordWidget::cycleAudioMode);
     layout->addWidget(m_audioButton);
 
-    m_stopButton = new QPushButton("■ Стоп", this);
-    m_stopButton->setStyleSheet("background-color: #ef4444; color: #ffffff;");
+    m_stopButton = new QPushButton(QStringLiteral("■ Стоп"), this);
+    m_stopButton->setMinimumWidth(95);
+    m_stopButton->setStyleSheet(QStringLiteral("background-color: #ef4444; color: #ffffff; font-size: 13px; font-weight: bold;"));
     connect(m_stopButton, &QPushButton::clicked, this, &RecordWidget::stopRecording);
     layout->addWidget(m_stopButton);
 
@@ -114,27 +183,27 @@ void RecordWidget::initControlBar()
     QString audioText;
     switch (m_audioMode) {
     case AudioRecordMode::SystemSound:
-        audioText = "🔊 Система";
-        m_audioButton->setStyleSheet("background-color: rgba(16, 185, 129, 0.3); color: #34d399; border: 1px solid #10b981;");
+        audioText = QStringLiteral("🔊 Звук: Система");
+        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(16, 185, 129, 0.3); color: #34d399; border: 1px solid #10b981;"));
         break;
     case AudioRecordMode::Microphone:
-        audioText = "🎤 Микрофон";
-        m_audioButton->setStyleSheet("background-color: rgba(59, 130, 246, 0.3); color: #60a5fa; border: 1px solid #3b82f6;");
+        audioText = QStringLiteral("🎤 Звук: Микрофон");
+        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(59, 130, 246, 0.3); color: #60a5fa; border: 1px solid #3b82f6;"));
         break;
     case AudioRecordMode::BothMixed:
-        audioText = "🔊+🎤 Всё";
-        m_audioButton->setStyleSheet("background-color: rgba(168, 85, 247, 0.3); color: #c084fc; border: 1px solid #a855f7;");
+        audioText = QStringLiteral("🔊+🎤 Звук: Всё");
+        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(168, 85, 247, 0.3); color: #c084fc; border: 1px solid #a855f7;"));
         break;
     case AudioRecordMode::Muted:
-        audioText = "🔇 Без звука";
-        m_audioButton->setStyleSheet("background-color: rgba(100, 116, 139, 0.3); color: #94a3b8; border: 1px solid #64748b;");
+        audioText = QStringLiteral("🔇 Звук: Выкл");
+        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(100, 116, 139, 0.3); color: #94a3b8; border: 1px solid #64748b;"));
         break;
     }
     m_audioButton->setText(audioText);
 
-    // Position control bar strictly OUTSIDE the recorded area
-    int barW = 350;
-    int barH = 46;
+    // Width increased to 490px so all labels fit comfortably with generous padding
+    int barW = 490;
+    int barH = 48;
     int barX = m_area.x() + (m_area.width() - barW) / 2;
     int barY = 0;
 
@@ -142,14 +211,11 @@ void RecordWidget::initControlBar()
     int screenH = screen ? screen->geometry().height() : 1080;
     int screenW = screen ? screen->geometry().width() : 1920;
 
-    if (m_area.y() >= barH + 8) {
-        // Place above the recorded area
+    if (m_area.y() >= barH + 10) {
         barY = m_area.y() - barH - 8;
-    } else if (m_area.y() + m_area.height() + barH + 8 <= screenH) {
-        // Place below the recorded area
+    } else if (m_area.y() + m_area.height() + barH + 10 <= screenH) {
         barY = m_area.y() + m_area.height() + 8;
     } else {
-        // Area covers full height: place in top-right corner
         barY = 10;
         barX = screenW - barW - 10;
     }
@@ -166,42 +232,49 @@ void RecordWidget::startFFmpeg()
     }
     QDir().mkpath(baseDir);
 
-    QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd_HH-mm-ss");
-    m_outputFile = QString("%1/flameshot_plus_%2.mp4").arg(baseDir, timestamp);
+    QString timestamp = QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd_HH-mm-ss"));
+    m_outputFile = QStringLiteral("%1/flameshot_plus_%2.mp4").arg(baseDir, timestamp);
+
+    QString activeMonitor = getActiveMonitorSource();
 
     QStringList args;
-    args << "-y";
-    args << "-f" << "x11grab";
-    args << "-draw_mouse" << "1";
-    args << "-video_size" << QString("%1x%2").arg(m_area.width()).arg(m_area.height());
-    args << "-framerate" << "30";
-    args << "-i" << QString(":0.0+%1,%2").arg(m_area.x()).arg(m_area.y());
+    args << QStringLiteral("-y");
+    args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
+    args << QStringLiteral("-f") << QStringLiteral("x11grab");
+    args << QStringLiteral("-draw_mouse") << QStringLiteral("1");
+    args << QStringLiteral("-video_size") << QStringLiteral("%1x%2").arg(m_area.width()).arg(m_area.height());
+    args << QStringLiteral("-framerate") << QStringLiteral("30");
+    args << QStringLiteral("-i") << QStringLiteral(":0.0+%1,%2").arg(m_area.x()).arg(m_area.y());
 
-    // Audio input setup
+    // Audio input setup using detected active monitor
     switch (m_audioMode) {
     case AudioRecordMode::SystemSound:
-        args << "-f" << "pulse" << "-i" << "@DEFAULT_MONITOR@";
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
+        args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << activeMonitor;
         break;
     case AudioRecordMode::Microphone:
-        args << "-f" << "pulse" << "-i" << "default";
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
+        args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << QStringLiteral("default");
         break;
     case AudioRecordMode::BothMixed:
-        args << "-f" << "pulse" << "-i" << "@DEFAULT_MONITOR@";
-        args << "-f" << "pulse" << "-i" << "default";
-        args << "-filter_complex" << "[0:a][1:a]amix=inputs=2:duration=longest[aout]";
-        args << "-map" << "0:v" << "-map" << "[aout]";
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
+        args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << activeMonitor;
+        args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
+        args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << QStringLiteral("default");
+        args << QStringLiteral("-filter_complex") << QStringLiteral("[0:a][1:a]amix=inputs=2:duration=longest[aout]");
+        args << QStringLiteral("-map") << QStringLiteral("0:v") << QStringLiteral("-map") << QStringLiteral("[aout]");
         break;
     case AudioRecordMode::Muted:
         break;
     }
 
-    args << "-c:v" << "libx264";
-    args << "-preset" << "ultrafast";
-    args << "-crf" << "23";
-    args << "-pix_fmt" << "yuv420p";
+    args << QStringLiteral("-c:v") << QStringLiteral("libx264");
+    args << QStringLiteral("-preset") << QStringLiteral("ultrafast");
+    args << QStringLiteral("-crf") << QStringLiteral("23");
+    args << QStringLiteral("-pix_fmt") << QStringLiteral("yuv420p");
 
     if (m_audioMode != AudioRecordMode::Muted) {
-        args << "-c:a" << "aac" << "-b:a" << "192k";
+        args << QStringLiteral("-c:a") << QStringLiteral("aac") << QStringLiteral("-b:a") << QStringLiteral("192k");
     }
 
     args << m_outputFile;
@@ -209,7 +282,8 @@ void RecordWidget::startFFmpeg()
     connect(m_ffmpegProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &RecordWidget::onProcessFinished);
 
-    m_ffmpegProcess->start("ffmpeg", args);
+    m_ffmpegProcess->setStandardErrorFile(QStringLiteral("/tmp/flameshot_ffmpeg.log"));
+    m_ffmpegProcess->start(QStringLiteral("ffmpeg"), args);
 }
 
 void RecordWidget::updateTimer()
@@ -217,15 +291,15 @@ void RecordWidget::updateTimer()
     m_secondsElapsed++;
     int mins = m_secondsElapsed / 60;
     int secs = m_secondsElapsed % 60;
-    m_timeLabel->setText(QString("%1:%2")
+    m_timeLabel->setText(QStringLiteral("%1:%2")
         .arg(mins, 2, 10, QChar('0'))
         .arg(secs, 2, 10, QChar('0')));
 
     // Blink red REC indicator
     if (m_secondsElapsed % 2 == 0) {
-        m_recDotLabel->setStyleSheet("color: #ef4444; font-weight: bold; font-size: 13px;");
+        m_recDotLabel->setStyleSheet(QStringLiteral("color: #ef4444; font-weight: bold; font-size: 13px;"));
     } else {
-        m_recDotLabel->setStyleSheet("color: rgba(239, 68, 68, 0.2); font-weight: bold; font-size: 13px;");
+        m_recDotLabel->setStyleSheet(QStringLiteral("color: rgba(239, 68, 68, 0.2); font-weight: bold; font-size: 13px;"));
     }
 }
 
@@ -234,23 +308,23 @@ void RecordWidget::cycleAudioMode()
     switch (m_audioMode) {
     case AudioRecordMode::SystemSound:
         m_audioMode = AudioRecordMode::Microphone;
-        m_audioButton->setText("🎤 Микрофон");
-        m_audioButton->setStyleSheet("background-color: rgba(59, 130, 246, 0.3); color: #60a5fa; border: 1px solid #3b82f6;");
+        m_audioButton->setText(QStringLiteral("🎤 Звук: Микрофон"));
+        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(59, 130, 246, 0.3); color: #60a5fa; border: 1px solid #3b82f6;"));
         break;
     case AudioRecordMode::Microphone:
         m_audioMode = AudioRecordMode::BothMixed;
-        m_audioButton->setText("🔊+🎤 Всё");
-        m_audioButton->setStyleSheet("background-color: rgba(168, 85, 247, 0.3); color: #c084fc; border: 1px solid #a855f7;");
+        m_audioButton->setText(QStringLiteral("🔊+🎤 Звук: Всё"));
+        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(168, 85, 247, 0.3); color: #c084fc; border: 1px solid #a855f7;"));
         break;
     case AudioRecordMode::BothMixed:
         m_audioMode = AudioRecordMode::Muted;
-        m_audioButton->setText("🔇 Без звука");
-        m_audioButton->setStyleSheet("background-color: rgba(100, 116, 139, 0.3); color: #94a3b8; border: 1px solid #64748b;");
+        m_audioButton->setText(QStringLiteral("🔇 Звук: Выкл"));
+        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(100, 116, 139, 0.3); color: #94a3b8; border: 1px solid #64748b;"));
         break;
     case AudioRecordMode::Muted:
         m_audioMode = AudioRecordMode::SystemSound;
-        m_audioButton->setText("🔊 Система");
-        m_audioButton->setStyleSheet("background-color: rgba(16, 185, 129, 0.3); color: #34d399; border: 1px solid #10b981;");
+        m_audioButton->setText(QStringLiteral("🔊 Звук: Система"));
+        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(16, 185, 129, 0.3); color: #34d399; border: 1px solid #10b981;"));
         break;
     }
 }
@@ -259,7 +333,7 @@ void RecordWidget::stopRecording()
 {
     m_timer->stop();
     m_stopButton->setEnabled(false);
-    m_stopButton->setText("Сохранение...");
+    m_stopButton->setText(QStringLiteral("Сохранение..."));
 
     if (m_ffmpegProcess && m_ffmpegProcess->state() != QProcess::NotRunning) {
         m_ffmpegProcess->write("q\n");
@@ -275,8 +349,8 @@ void RecordWidget::onProcessFinished(int exitCode, QProcess::ExitStatus exitStat
 
     SystemNotification notification;
     notification.sendMessage(
-        QString("Видеозапись сохранена в:\n%1").arg(m_outputFile),
-        "Flameshot +",
+        QStringLiteral("Видеозапись сохранена в:\n%1").arg(m_outputFile),
+        QStringLiteral("Flameshot +"),
         m_outputFile
     );
 
