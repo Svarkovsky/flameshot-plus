@@ -48,6 +48,7 @@ public:
         TYPE_SIZEDECREASE = 21,
         TYPE_INVERT = 22,
         TYPE_ACCEPT = 23,
+        TYPE_RECORD = 24,
     };
     Q_ENUM(Type);
 
@@ -75,7 +76,9 @@ public:
         // increase tool size for all tools
         REQ_INCREASE_TOOL_SIZE,
         // decrease tool size for all tools
-        REQ_DECREASE_TOOL_SIZE
+        REQ_DECREASE_TOOL_SIZE,
+        // Start video recording with selected area
+        REQ_RECORD_VIDEO
     };
 
     explicit CaptureTool(QObject* parent = nullptr)

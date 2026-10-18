@@ -26,6 +26,10 @@
 #include "src/widgets/capture/notifierbox.h"
 #include "src/widgets/capture/overlaymessage.h"
 #include "src/widgets/orientablepushbutton.h"
+#include "src/utils/windowdetector.h"
+#include "src/widgets/record/recordwidget.h"
+#include <QFile>
+#include <QTextStream>
 #include "src/widgets/panel/sidepanelwidget.h"
 #include "src/widgets/panel/utilitypanel.h"
 #include "src/widgets/updatenotificationwidget.h"
@@ -679,6 +683,16 @@ void CaptureWidget::mouseDoubleClickEvent(QMouseEvent* event)
             copyTool.pressed(m_context);
             qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
         }
+    } else {
+        // Double-click outside current selection: detect window under cursor
+        QRect winGeom;
+        QString title, appClass;
+        if (WindowDetector::detectWindowAt(event->pos(), winGeom, title, appClass)) {
+            m_selection->setVisible(true);
+            m_selection->setGeometry(winGeom);
+            emit m_selection->geometrySettled();
+            return;
+        }
     }
 }
 
@@ -830,6 +844,17 @@ void CaptureWidget::keyPressEvent(QKeyEvent* e)
         }
     } else {
         m_toolSizeByKeyboard = 0;
+    }
+
+    if (e->key() == Qt::Key_W || e->key() == Qt::Key_Tab) {
+        QRect winGeom;
+        QString title, appClass;
+        if (WindowDetector::detectWindowAt(m_context.mousePos, winGeom, title, appClass)) {
+            m_selection->setVisible(true);
+            m_selection->setGeometry(winGeom);
+            emit m_selection->geometrySettled();
+            return;
+        }
     }
 
     if (!m_selection->isVisible()) {
@@ -1082,6 +1107,22 @@ void CaptureWidget::initSelection()
             }
             m_buttonHandler->updatePosition(m_selection->geometry());
             m_buttonHandler->show();
+
+            // Export active area geometry to memory/environment files
+            QRect geom = m_selection->geometry();
+            QFile envFile(QStringLiteral("/tmp/screenink_area.env"));
+            if (envFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+                QTextStream out(&envFile);
+                out << "SCREENINK_X=" << geom.x() << "\n"
+                    << "SCREENINK_Y=" << geom.y() << "\n"
+                    << "SCREENINK_WIDTH=" << geom.width() << "\n"
+                    << "SCREENINK_HEIGHT=" << geom.height() << "\n";
+            }
+            QFile txtFile(QStringLiteral("/tmp/screenink_area.txt"));
+            if (txtFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+                QTextStream out(&txtFile);
+                out << geom.width() << "x" << geom.height() << "+" << geom.x() << "+" << geom.y() << "\n";
+            }
         } else {
             m_buttonHandler->hide();
         }
@@ -1211,6 +1252,14 @@ void CaptureWidget::handleToolSignal(CaptureTool::Request r)
         case CaptureTool::REQ_DECREASE_TOOL_SIZE:
             setToolSize(m_context.toolSize - 1);
             break;
+        case CaptureTool::REQ_RECORD_VIDEO: {
+            QRect geom = m_selection->geometry();
+            if (!geom.isValid() || geom.width() < 16 || geom.height() < 16) {
+                geom = rect();
+            }
+            RecordWidget::startRecording(geom, true);
+            break;
+        }
         default:
             break;
     }

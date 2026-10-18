@@ -104,7 +104,12 @@ public:
     CONFIG_GETTER_SETTER(uploadHistoryMax, setUploadHistoryMax, int)
     CONFIG_GETTER_SETTER(saveAfterCopy, setSaveAfterCopy, bool)
     CONFIG_GETTER_SETTER(copyPathAfterSave, setCopyPathAfterSave, bool)
-    CONFIG_GETTER_SETTER(saveAsFileExtension, setSaveAsFileExtension, QString)
+    CONFIG_SETTER(setSaveAsFileExtension, saveAsFileExtension, QString)
+    QString saveAsFileExtension() const
+    {
+        QString ext = value(QStringLiteral("saveAsFileExtension")).toString();
+        return ext.isEmpty() ? QStringLiteral("webp") : ext;
+    }
     CONFIG_GETTER_SETTER(antialiasingPinZoom, setAntialiasingPinZoom, bool)
     CONFIG_GETTER_SETTER(useJpgForClipboard, setUseJpgForClipboard, bool)
     CONFIG_GETTER_SETTER(uploadWithoutConfirmation,

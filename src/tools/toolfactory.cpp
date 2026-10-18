@@ -17,6 +17,7 @@
 #include "pencil/penciltool.h"
 #include "pin/pintool.h"
 #include "pixelate/pixelatetool.h"
+#include "record/recordtool.h"
 #include "rectangle/rectangletool.h"
 #include "redo/redotool.h"
 #include "save/savetool.h"
@@ -64,6 +65,7 @@ CaptureTool* ToolFactory::CreateTool(CaptureTool::Type t, QObject* parent)
         if_TYPE_return_TOOL(TYPE_SIZEDECREASE, SizeDecreaseTool);
         if_TYPE_return_TOOL(TYPE_INVERT, InvertTool);
         if_TYPE_return_TOOL(TYPE_ACCEPT, AcceptTool);
+        if_TYPE_return_TOOL(TYPE_RECORD, RecordTool);
         default:
             return nullptr;
     }
