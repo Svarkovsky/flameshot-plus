@@ -8,6 +8,7 @@ target_sources(
           valuehandler.h
           request.h
           strfparse.h
+          windowdetector.h
 )
 
 target_sources(
@@ -26,5 +27,6 @@ target_sources(
           colorutils.cpp
           history.cpp
           strfparse.cpp
-        request.cpp
+          request.cpp
+          windowdetector.cpp
 )

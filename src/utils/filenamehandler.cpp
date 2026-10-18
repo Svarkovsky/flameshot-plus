@@ -92,7 +92,7 @@ QString FileNameHandler::properScreenshotPath(QString path,
         // Leave the suffix as it was
         path += "." + suffix;
     } else {
-        path += ".png";
+        path += ".webp";
     }
 
     if (!QFileInfo::exists(path)) {
