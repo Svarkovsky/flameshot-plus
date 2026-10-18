@@ -1263,6 +1263,7 @@ void CaptureWidget::handleToolSignal(CaptureTool::Request r)
                 geom = rect();
             }
             QRect globalGeom(mapToGlobal(geom.topLeft()), geom.size());
+            Flameshot::instance()->setExternalWidget(true);
             RecordWidget::startRecording(globalGeom);
             break;
         }

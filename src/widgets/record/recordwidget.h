@@ -6,27 +6,12 @@
 #include <QTimer>
 #include <QLabel>
 #include <QPushButton>
-#include <QVector>
 
 enum class AudioRecordMode {
     SystemSound, // @DEFAULT_MONITOR@
     Microphone,  // default
     BothMixed,   // system + mic
     Muted        // no sound
-};
-
-class RecordFrame : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit RecordFrame(QWidget* parent = nullptr);
-    void setBorderColor(const QColor& color);
-
-protected:
-    void paintEvent(QPaintEvent* event) override;
-
-private:
-    QColor m_color;
 };
 
 class RecordWidget : public QWidget
@@ -51,8 +36,6 @@ private slots:
 
 private:
     void initControlBar();
-    void createExternalBorders();
-    void updateBorderVisibility(bool visible);
     void startFFmpeg();
 
     QRect m_area;
@@ -67,9 +50,6 @@ private:
     QLabel* m_timeLabel;
     QPushButton* m_audioButton;
     QPushButton* m_stopButton;
-
-    // 4 separate 2px border widgets positioned strictly OUTSIDE the recorded area
-    QVector<RecordFrame*> m_borderFrames;
 
     QPoint m_dragPosition;
 };

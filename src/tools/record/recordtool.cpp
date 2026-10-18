@@ -40,5 +40,6 @@ void RecordTool::pressed(CaptureContext& context)
 {
     Q_UNUSED(context);
     emit requestAction(REQ_RECORD_VIDEO);
+    emit requestAction(REQ_CAPTURE_DONE_OK);
     emit requestAction(REQ_CLOSE_GUI);
 }
