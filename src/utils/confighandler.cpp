@@ -164,6 +164,7 @@ static QMap<QString, QSharedPointer<KeySequence>> recognizedShortcuts = {
 #else
     SHORTCUT("TYPE_DELETE_CURRENT_TOOL" ,   "Delete"                ),
 #endif
+    SHORTCUT("TYPE_RECORD"              ,                           ),
     SHORTCUT("TYPE_PIN"                 ,                           ),
     SHORTCUT("TYPE_SELECTIONINDICATOR"  ,                           ),
     SHORTCUT("TYPE_SIZEINCREASE"        ,                           ),
