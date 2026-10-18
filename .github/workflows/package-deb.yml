@@ -29,6 +29,7 @@ jobs:
             ca-certificates \
             qtbase5-dev \
             libqt5svg5-dev \
+            qttools5-dev \
             qttools5-dev-tools \
             libx11-dev \
             ffmpeg \
