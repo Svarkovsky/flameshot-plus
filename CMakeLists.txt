@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
+cmake_policy(SET CMP0069 NEW)
 # cmake_policy(SET CMP0076 OLD)
 
 set(FLAMESHOT_VERSION 12.1.0)
@@ -73,6 +74,29 @@ include(cmake/StandardProjectSettings.cmake)
 
 add_library(project_options INTERFACE)
 target_compile_features(project_options INTERFACE cxx_std_17)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(project_options INTERFACE
+        $<$<CONFIG:Release>:
+            -O3
+            -flto=auto
+            -fno-plt
+            -ffunction-sections
+            -fdata-sections
+            -fomit-frame-pointer
+        >
+    )
+    target_link_options(project_options INTERFACE
+        $<$<CONFIG:Release>:
+            -O3
+            -flto=auto
+            -Wl,--gc-sections
+            -Wl,--as-needed
+            -Wl,-O1
+            -Wl,--sort-common
+        >
+    )
+endif()
 
 add_library(project_warnings INTERFACE)
 

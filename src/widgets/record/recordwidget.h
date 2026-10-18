@@ -22,6 +22,8 @@ public:
     ~RecordWidget() override;
 
     static void startRecording(const QRect& captureArea, AudioRecordMode audioMode = AudioRecordMode::SystemSound);
+    static QString getVideoSaveDirectory();
+    static QString generateOutputFilePath();
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

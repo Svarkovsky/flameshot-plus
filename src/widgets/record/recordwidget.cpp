@@ -129,6 +129,20 @@ void RecordWidget::startRecording(const QRect& captureArea, AudioRecordMode audi
     widget->activateWindow();
 }
 
+QString RecordWidget::getVideoSaveDirectory()
+{
+    QString baseDir = QDir::homePath() + QStringLiteral("/Video/flameshot-plus");
+    QDir().mkpath(baseDir);
+    return baseDir;
+}
+
+QString RecordWidget::generateOutputFilePath()
+{
+    QString baseDir = getVideoSaveDirectory();
+    QString timestamp = QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd_HH-mm-ss"));
+    return QStringLiteral("%1/flameshot_plus_%2.mp4").arg(baseDir, timestamp);
+}
+
 void RecordWidget::initControlBar()
 {
     setStyleSheet(
@@ -299,11 +313,7 @@ void RecordWidget::onCancelClicked()
 
 void RecordWidget::startFFmpeg()
 {
-    QString baseDir = QDir::homePath() + QStringLiteral("/Video");
-    QDir().mkpath(baseDir);
-
-    QString timestamp = QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd_HH-mm-ss"));
-    m_outputFile = QStringLiteral("%1/flameshot_plus_%2.mp4").arg(baseDir, timestamp);
+    m_outputFile = generateOutputFilePath();
 
     QString activeMonitor = getActiveMonitorSource();
 
