@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
   build-debian12:
@@ -87,3 +88,47 @@ jobs:
             release-artifacts/flameshot-plus
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-package:
+    name: Publish to GitHub Packages (GHCR)
+    needs: build-debian12
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: flameshot-plus-debian12-amd64
+          path: release-artifacts
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push package to GHCR
+        run: |
+          IMAGE_NAME="ghcr.io/${{ github.repository }}"
+          IMAGE_NAME=$(echo "$IMAGE_NAME" | tr '[:upper:]' '[:lower:]')
+
+          cat << 'EOF' > Dockerfile.package
+          FROM debian:bookworm-slim
+          LABEL org.opencontainers.image.source="https://github.com/Svarkovsky/flameshot-plus"
+          LABEL org.opencontainers.image.description="Flameshot +: Native lightweight screen annotation, smart window detection, WebP capture, and integrated desktop video & audio recording."
+          COPY release-artifacts/flameshot-plus_12.1.0-1_amd64.deb /flameshot-plus.deb
+          RUN apt-get update && apt-get install -y --no-install-recommends /flameshot-plus.deb && rm -rf /var/lib/apt/lists/*
+          ENTRYPOINT ["flameshot-plus"]
+          EOF
+
+          docker build -t "$IMAGE_NAME:latest" -t "$IMAGE_NAME:12.1.0-1" -f Dockerfile.package .
+          docker push "$IMAGE_NAME:latest"
+          docker push "$IMAGE_NAME:12.1.0-1"
