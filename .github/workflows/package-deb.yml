@@ -41,17 +41,14 @@ jobs:
 
       - name: Build sstrip from ELFkickers
         run: |
-          mkdir -p tools
-          cd tools
+          mkdir -p /tmp/elfkickers
+          cd /tmp/elfkickers
           wget -q http://www.muppetlabs.com/~breadbox/pub/software/ELFkickers-3.2.tar.gz || curl -sSL http://www.muppetlabs.com/~breadbox/pub/software/ELFkickers-3.2.tar.gz -o ELFkickers-3.2.tar.gz
-          if [ -f ELFkickers-3.2.tar.gz ]; then
-            tar -xf ELFkickers-3.2.tar.gz
-            cd ELFkickers-3.2/elfrw && make libelfrw.a
-            cd ../sstrip && gcc -O2 -I../elfrw sstrip.c ../elfrw/libelfrw.a -o ../../sstrip
-            cd ../..
-            rm -rf tools/ELFkickers-3.2 tools/ELFkickers-3.2.tar.gz
-            chmod +x tools/sstrip
-          fi
+          tar -xf ELFkickers-3.2.tar.gz
+          cd ELFkickers-3.2/elfrw && make libelfrw.a
+          cd ../sstrip && gcc -O2 -I../elfrw sstrip.c ../elfrw/libelfrw.a -o /usr/local/bin/sstrip
+          chmod +x /usr/local/bin/sstrip
+          rm -rf /tmp/elfkickers
 
       - name: Configure CMake
         run: |
@@ -68,8 +65,8 @@ jobs:
           mkdir -p release-artifacts
           ./packaging/build_deb.sh build ./release-artifacts
           strip -s -R .comment -R .note -R .note.gnu.build-id -R .note.ABI-tag build/src/flameshot -o ./release-artifacts/flameshot-plus
-          if [ -x tools/sstrip ]; then
-            ./tools/sstrip ./release-artifacts/flameshot-plus || true
+          if command -v sstrip >/dev/null 2>&1; then
+            sstrip ./release-artifacts/flameshot-plus || true
           fi
           chmod +x ./release-artifacts/flameshot-plus
 
