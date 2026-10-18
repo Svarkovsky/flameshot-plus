@@ -35,15 +35,33 @@ This fork is **not** an ad-hoc collection of cosmetic patches or casual tweaks. 
 - **Debian Policy Compliance Audit:** Unlike generic forks, packages are engineered with standard Debian packaging rules (`Provides: flameshot`, `Conflicts: flameshot`, `Replaces: flameshot`), ensuring seamless 1-command upgrades without dpkg file collisions. Complete `/usr/share/doc/flameshot-plus/copyright` and `postinst`/`postrm` desktop/icon cache hooks are embedded.
 - **Deep Binary Hardening & Size Optimization:** Compiled with full Link-Time Optimization (`-flto=auto`), linker dead-code stripping (`-Wl,--gc-sections`), non-executable stack verification (`GNU_STACK`), and section table removal via `sstrip` from ELFkickers. The resulting binary is reduced from **49.4 MB** to **1.6 MB** without sacrificing functionality.
 
-### Automated Test Suite (Run on Every CI Build)
+### Multi-Tier Automated Test Suite (Run on Every CI Build)
 
-Every commit and release artifact undergoes automated verification prior to publication:
-1. **ELF Binary Security:** Verifies execution permissions, compact size threshold (< 3.0 MB), and absence of executable stack (`GNU_STACK` RWX check).
-2. **CLI & Runtime Contract:** Validates `--version`, rebrand consistency, and `--help` exit codes.
-3. **Configuration & Semantic Integrity:** Executes automated `config --check` to guarantee zero unrecognized options, zero semantic violations, and flawless shortcut mapping.
-4. **Storage & Recording Pipeline:** Verifies runtime paths (`~/Video/flameshot-plus/`) and environment coordinate contracts (`/tmp/screenink_area.env`).
-5. **Screen Capture Pipeline:** Validates native headless WebP generation and file structure integrity.
-6. **Debian Package Validation:** Inspects `.deb` control fields, replacement directives, binary layout, and embedded GPLv3 copyright documentation.
+Every commit and release artifact undergoes exhaustive automated verification across multiple CI stages before publication:
+
+1. **Static Code Analysis (`cppcheck`):**
+   - Independent pre-build CI gate running with `--enable=warning,performance,portability --error-exitcode=1`.
+   - Mathematically verifies code against null-pointer dereferences, resource leaks, dead stores, and undefined behavior before compilation begins.
+2. **Virtual Display GUI Lifecycle & Event Loop (`Xvfb` + `xdotool`):**
+   - Headless automated GUI test running under a real virtual X11 server (`1920x1080x24`).
+   - Spawns the graphical overlay, initializes the Qt event loop, dispatches synthetic keyboard events (`Escape`), and confirms clean session termination and memory deallocation with exit code 0.
+3. **Concurrency & SingleApplication Mutex Safety:**
+   - Multi-process race-condition testing verifying that concurrent invocations gracefully lock, transfer focus, and prevent configuration/file corruption.
+4. **Fault Injection & Malformed Geometry Protection:**
+   - Injects degenerate and invalid capture regions (e.g., `0x0+0+0`, out-of-bounds offsets) to verify that exception handlers reject invalid inputs without segmentation faults.
+5. **Configuration & Shortcut Semantic Integrity:**
+   - Executes automated `config --check` verifying zero unrecognized keys, zero semantic errors, and full shortcut hash table integrity.
+6. **ELF Binary Security & Hardening:**
+   - Inspects ELF headers to enforce non-executable stack permissions (`GNU_STACK` RW, no X).
+   - Enforces strict size budget (< 3.0 MB) after LTO and `sstrip` section pruning.
+7. **CLI Interface Contract:**
+   - Validates command-line flags, rebrand integrity, and exit status contracts.
+8. **Storage & Recording Pipeline:**
+   - Verifies runtime paths (`~/Video/flameshot-plus/`) and environment coordinate contracts (`/tmp/screenink_area.env`).
+9. **Screen Capture & WebP Encoding Pipeline:**
+   - Validates native headless WebP generation, compression validity, and image header integrity.
+10. **Debian Package Policy Compliance:**
+    - Deep structural audit of the `.deb` package (`dpkg -I`, `dpkg -c`), checking package replacement directives (`Provides/Conflicts/Replaces: flameshot`), embedded GPLv3 copyright documentation, and `postinst`/`postrm` cache hooks.
 
 ---
 
