@@ -81,13 +81,15 @@ RecordWidget::RecordWidget(const QRect& captureArea, AudioRecordMode audioMode, 
     : QWidget(parent, Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint)
     , m_area(captureArea)
     , m_audioMode(audioMode)
+    , m_isRecording(false)
     , m_secondsElapsed(0)
     , m_ffmpegProcess(new QProcess(this))
     , m_timer(new QTimer(this))
-    , m_recDotLabel(nullptr)
+    , m_statusLabel(nullptr)
     , m_timeLabel(nullptr)
     , m_audioButton(nullptr)
-    , m_stopButton(nullptr)
+    , m_startStopButton(nullptr)
+    , m_cancelButton(nullptr)
 {
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(QStringLiteral("Flameshot + Recording"));
@@ -100,10 +102,8 @@ RecordWidget::RecordWidget(const QRect& captureArea, AudioRecordMode audioMode, 
     m_area = QRect(x, y, qMax(16, w), qMax(16, h));
 
     initControlBar();
-    startFFmpeg();
 
     connect(m_timer, &QTimer::timeout, this, &RecordWidget::updateTimer);
-    m_timer->start(1000);
 }
 
 RecordWidget::~RecordWidget()
@@ -134,7 +134,7 @@ void RecordWidget::initControlBar()
     setStyleSheet(
         "RecordWidget { "
         "   background-color: #1a1e28; "
-        "   border: 2px solid #ef4444; "
+        "   border: 2px solid #38bdf8; "
         "   border-radius: 12px; "
         "} "
         "QLabel { "
@@ -156,30 +156,64 @@ void RecordWidget::initControlBar()
 
     auto* layout = new QHBoxLayout(this);
     layout->setContentsMargins(14, 6, 14, 6);
-    layout->setSpacing(12);
+    layout->setSpacing(10);
 
-    m_recDotLabel = new QLabel(QStringLiteral("● REC"), this);
-    m_recDotLabel->setStyleSheet(QStringLiteral("color: #ef4444; font-weight: bold; font-size: 13px;"));
-    m_recDotLabel->setFixedWidth(55);
-    layout->addWidget(m_recDotLabel);
+    // Initial status: Ready (Готов)
+    m_statusLabel = new QLabel(QStringLiteral("● ГОТОВ"), this);
+    m_statusLabel->setStyleSheet(QStringLiteral("color: #38bdf8; font-weight: bold; font-size: 13px;"));
+    m_statusLabel->setFixedWidth(65);
+    layout->addWidget(m_statusLabel);
 
     m_timeLabel = new QLabel(QStringLiteral("00:00"), this);
     m_timeLabel->setStyleSheet(QStringLiteral("color: #ffffff; font-family: monospace; font-size: 15px; font-weight: bold;"));
-    m_timeLabel->setFixedWidth(60);
+    m_timeLabel->setFixedWidth(55);
     layout->addWidget(m_timeLabel);
 
     m_audioButton = new QPushButton(this);
-    m_audioButton->setMinimumWidth(180);
+    m_audioButton->setMinimumWidth(185);
+    updateAudioButtonLabel();
     connect(m_audioButton, &QPushButton::clicked, this, &RecordWidget::cycleAudioMode);
     layout->addWidget(m_audioButton);
 
-    m_stopButton = new QPushButton(QStringLiteral("■ Стоп"), this);
-    m_stopButton->setMinimumWidth(95);
-    m_stopButton->setStyleSheet(QStringLiteral("background-color: #ef4444; color: #ffffff; font-size: 13px; font-weight: bold;"));
-    connect(m_stopButton, &QPushButton::clicked, this, &RecordWidget::stopRecording);
-    layout->addWidget(m_stopButton);
+    // Start Button (Green initially)
+    m_startStopButton = new QPushButton(QStringLiteral("● Запись"), this);
+    m_startStopButton->setMinimumWidth(95);
+    m_startStopButton->setStyleSheet(QStringLiteral("background-color: #10b981; color: #ffffff; font-size: 13px; font-weight: bold;"));
+    connect(m_startStopButton, &QPushButton::clicked, this, &RecordWidget::onStartStopClicked);
+    layout->addWidget(m_startStopButton);
 
-    // Update audio button label and style based on initial mode
+    // Cancel Button
+    m_cancelButton = new QPushButton(QStringLiteral("✕"), this);
+    m_cancelButton->setFixedWidth(36);
+    m_cancelButton->setStyleSheet(QStringLiteral("background-color: rgba(255, 255, 255, 0.1); color: #94a3b8; font-size: 14px; font-weight: bold;"));
+    m_cancelButton->setToolTip(QStringLiteral("Отмена записи"));
+    connect(m_cancelButton, &QPushButton::clicked, this, &RecordWidget::onCancelClicked);
+    layout->addWidget(m_cancelButton);
+
+    int barW = 530;
+    int barH = 48;
+    int barX = m_area.x() + (m_area.width() - barW) / 2;
+    int barY = 0;
+
+    QScreen* screen = QGuiApplication::primaryScreen();
+    int screenH = screen ? screen->geometry().height() : 1080;
+    int screenW = screen ? screen->geometry().width() : 1920;
+
+    if (m_area.y() >= barH + 10) {
+        barY = m_area.y() - barH - 8;
+    } else if (m_area.y() + m_area.height() + barH + 10 <= screenH) {
+        barY = m_area.y() + m_area.height() + 8;
+    } else {
+        barY = 10;
+        barX = screenW - barW - 10;
+    }
+
+    barX = qBound(10, barX, screenW - barW - 10);
+    setGeometry(barX, barY, barW, barH);
+}
+
+void RecordWidget::updateAudioButtonLabel()
+{
     QString audioText;
     switch (m_audioMode) {
     case AudioRecordMode::SystemSound:
@@ -200,28 +234,67 @@ void RecordWidget::initControlBar()
         break;
     }
     m_audioButton->setText(audioText);
+}
 
-    // Width increased to 490px so all labels fit comfortably with generous padding
-    int barW = 490;
-    int barH = 48;
-    int barX = m_area.x() + (m_area.width() - barW) / 2;
-    int barY = 0;
+void RecordWidget::cycleAudioMode()
+{
+    if (m_isRecording) return; // Locked during active recording
 
-    QScreen* screen = QGuiApplication::primaryScreen();
-    int screenH = screen ? screen->geometry().height() : 1080;
-    int screenW = screen ? screen->geometry().width() : 1920;
-
-    if (m_area.y() >= barH + 10) {
-        barY = m_area.y() - barH - 8;
-    } else if (m_area.y() + m_area.height() + barH + 10 <= screenH) {
-        barY = m_area.y() + m_area.height() + 8;
-    } else {
-        barY = 10;
-        barX = screenW - barW - 10;
+    switch (m_audioMode) {
+    case AudioRecordMode::SystemSound:
+        m_audioMode = AudioRecordMode::Microphone;
+        break;
+    case AudioRecordMode::Microphone:
+        m_audioMode = AudioRecordMode::BothMixed;
+        break;
+    case AudioRecordMode::BothMixed:
+        m_audioMode = AudioRecordMode::Muted;
+        break;
+    case AudioRecordMode::Muted:
+        m_audioMode = AudioRecordMode::SystemSound;
+        break;
     }
+    updateAudioButtonLabel();
+}
 
-    barX = qBound(10, barX, screenW - barW - 10);
-    setGeometry(barX, barY, barW, barH);
+void RecordWidget::onStartStopClicked()
+{
+    if (!m_isRecording) {
+        // Transition to Recording state
+        m_isRecording = true;
+        setStyleSheet(
+            "RecordWidget { "
+            "   background-color: #1a1e28; "
+            "   border: 2px solid #ef4444; "
+            "   border-radius: 12px; "
+            "} "
+            "QLabel { background: transparent; } "
+            "QPushButton { padding: 7px 14px; border-radius: 8px; font-weight: bold; font-size: 13px; border: none; cursor: pointer; white-space: nowrap; } "
+            "QPushButton:hover { opacity: 0.9; }"
+        );
+
+        m_statusLabel->setText(QStringLiteral("● REC"));
+        m_statusLabel->setStyleSheet(QStringLiteral("color: #ef4444; font-weight: bold; font-size: 13px;"));
+
+        m_audioButton->setEnabled(false);
+        m_cancelButton->hide();
+
+        m_startStopButton->setText(QStringLiteral("■ Стоп"));
+        m_startStopButton->setMinimumWidth(130);
+        m_startStopButton->setStyleSheet(QStringLiteral("background-color: #ef4444; color: #ffffff; font-size: 13px; font-weight: bold;"));
+
+        startFFmpeg();
+        m_timer->start(1000);
+    } else {
+        stopRecording();
+    }
+}
+
+void RecordWidget::onCancelClicked()
+{
+    if (!m_isRecording) {
+        close();
+    }
 }
 
 void RecordWidget::startFFmpeg()
@@ -246,22 +319,24 @@ void RecordWidget::startFFmpeg()
     args << QStringLiteral("-framerate") << QStringLiteral("30");
     args << QStringLiteral("-i") << QStringLiteral(":0.0+%1,%2").arg(m_area.x()).arg(m_area.y());
 
-    // Audio input setup using detected active monitor
+    // Audio input setup with volume boost to reference 100% and limiter
     switch (m_audioMode) {
     case AudioRecordMode::SystemSound:
         args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
         args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << activeMonitor;
+        args << QStringLiteral("-af") << QStringLiteral("volume=2.2,alimiter=limit=0.98");
         break;
     case AudioRecordMode::Microphone:
         args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
         args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << QStringLiteral("default");
+        args << QStringLiteral("-af") << QStringLiteral("volume=1.8,alimiter=limit=0.98");
         break;
     case AudioRecordMode::BothMixed:
         args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
         args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << activeMonitor;
         args << QStringLiteral("-thread_queue_size") << QStringLiteral("512");
         args << QStringLiteral("-f") << QStringLiteral("pulse") << QStringLiteral("-i") << QStringLiteral("default");
-        args << QStringLiteral("-filter_complex") << QStringLiteral("[0:a][1:a]amix=inputs=2:duration=longest[aout]");
+        args << QStringLiteral("-filter_complex") << QStringLiteral("[0:a][1:a]amix=inputs=2:duration=longest,volume=2.2,alimiter=limit=0.98[aout]");
         args << QStringLiteral("-map") << QStringLiteral("0:v") << QStringLiteral("-map") << QStringLiteral("[aout]");
         break;
     case AudioRecordMode::Muted:
@@ -297,43 +372,17 @@ void RecordWidget::updateTimer()
 
     // Blink red REC indicator
     if (m_secondsElapsed % 2 == 0) {
-        m_recDotLabel->setStyleSheet(QStringLiteral("color: #ef4444; font-weight: bold; font-size: 13px;"));
+        m_statusLabel->setStyleSheet(QStringLiteral("color: #ef4444; font-weight: bold; font-size: 13px;"));
     } else {
-        m_recDotLabel->setStyleSheet(QStringLiteral("color: rgba(239, 68, 68, 0.2); font-weight: bold; font-size: 13px;"));
-    }
-}
-
-void RecordWidget::cycleAudioMode()
-{
-    switch (m_audioMode) {
-    case AudioRecordMode::SystemSound:
-        m_audioMode = AudioRecordMode::Microphone;
-        m_audioButton->setText(QStringLiteral("🎤 Звук: Микрофон"));
-        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(59, 130, 246, 0.3); color: #60a5fa; border: 1px solid #3b82f6;"));
-        break;
-    case AudioRecordMode::Microphone:
-        m_audioMode = AudioRecordMode::BothMixed;
-        m_audioButton->setText(QStringLiteral("🔊+🎤 Звук: Всё"));
-        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(168, 85, 247, 0.3); color: #c084fc; border: 1px solid #a855f7;"));
-        break;
-    case AudioRecordMode::BothMixed:
-        m_audioMode = AudioRecordMode::Muted;
-        m_audioButton->setText(QStringLiteral("🔇 Звук: Выкл"));
-        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(100, 116, 139, 0.3); color: #94a3b8; border: 1px solid #64748b;"));
-        break;
-    case AudioRecordMode::Muted:
-        m_audioMode = AudioRecordMode::SystemSound;
-        m_audioButton->setText(QStringLiteral("🔊 Звук: Система"));
-        m_audioButton->setStyleSheet(QStringLiteral("background-color: rgba(16, 185, 129, 0.3); color: #34d399; border: 1px solid #10b981;"));
-        break;
+        m_statusLabel->setStyleSheet(QStringLiteral("color: rgba(239, 68, 68, 0.2); font-weight: bold; font-size: 13px;"));
     }
 }
 
 void RecordWidget::stopRecording()
 {
     m_timer->stop();
-    m_stopButton->setEnabled(false);
-    m_stopButton->setText(QStringLiteral("Сохранение..."));
+    m_startStopButton->setEnabled(false);
+    m_startStopButton->setText(QStringLiteral("Сохранение..."));
 
     if (m_ffmpegProcess && m_ffmpegProcess->state() != QProcess::NotRunning) {
         m_ffmpegProcess->write("q\n");
@@ -360,7 +409,13 @@ void RecordWidget::onProcessFinished(int exitCode, QProcess::ExitStatus exitStat
 void RecordWidget::keyPressEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Escape || event->key() == Qt::Key_Q) {
-        stopRecording();
+        if (m_isRecording) {
+            stopRecording();
+        } else {
+            close();
+        }
+    } else if (event->key() == Qt::Key_Space || event->key() == Qt::Key_Return) {
+        onStartStopClicked();
     } else {
         QWidget::keyPressEvent(event);
     }

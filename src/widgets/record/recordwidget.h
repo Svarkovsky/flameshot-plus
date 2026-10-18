@@ -31,25 +31,30 @@ protected:
 private slots:
     void updateTimer();
     void cycleAudioMode();
-    void stopRecording();
+    void onStartStopClicked();
+    void onCancelClicked();
     void onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     void initControlBar();
+    void updateAudioButtonLabel();
     void startFFmpeg();
+    void stopRecording();
 
     QRect m_area;
     AudioRecordMode m_audioMode;
+    bool m_isRecording;
     int m_secondsElapsed;
     QString m_outputFile;
 
     QProcess* m_ffmpegProcess;
     QTimer* m_timer;
 
-    QLabel* m_recDotLabel;
+    QLabel* m_statusLabel;
     QLabel* m_timeLabel;
     QPushButton* m_audioButton;
-    QPushButton* m_stopButton;
+    QPushButton* m_startStopButton;
+    QPushButton* m_cancelButton;
 
     QPoint m_dragPosition;
 };
