@@ -2929,4 +2929,158 @@ You may need to escape the &apos;#&apos; sign as in &apos;\#FFF&apos;</translati
         <translation>%1 (%2)</translation>
     </message>
 </context>
+<context>
+    <name>RecordWidget</name>
+    <message>
+        <source>READY</source>
+        <translation>READY</translation>
+    </message>
+    <message>
+        <source>REC</source>
+        <translation>REC</translation>
+    </message>
+    <message>
+        <source>SAVING...</source>
+        <translation>SAVING...</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Record</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Stop</translation>
+    </message>
+    <message>
+        <source>Sound: System</source>
+        <translation>Sound: System</translation>
+    </message>
+    <message>
+        <source>Sound: Mic</source>
+        <translation>Sound: Mic</translation>
+    </message>
+    <message>
+        <source>Sound: All</source>
+        <translation>Sound: All</translation>
+    </message>
+    <message>
+        <source>Sound: Muted</source>
+        <translation>Sound: Muted</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Clear</translation>
+    </message>
+    <message>
+        <source>Clear canvas (C)</source>
+        <translation>Clear canvas (C)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds (Click to switch)</source>
+        <translation>Audio source: System sounds (Click to switch)</translation>
+    </message>
+    <message>
+        <source>Audio source: Microphone (Click to switch)</source>
+        <translation>Audio source: Microphone (Click to switch)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds + Microphone (Click to switch)</source>
+        <translation>Audio source: System sounds + Microphone (Click to switch)</translation>
+    </message>
+    <message>
+        <source>Audio muted (Click to switch)</source>
+        <translation>Audio muted (Click to switch)</translation>
+    </message>
+</context>
+<context>
+    <name>RecordPreviewDialog</name>
+    <message>
+        <source>Video recorded</source>
+        <translation>Video recorded</translation>
+    </message>
+    <message>
+        <source> MB</source>
+        <translation> MB</translation>
+    </message>
+    <message>
+        <source>Trim video edges:</source>
+        <translation>Trim video edges:</translation>
+    </message>
+    <message>
+        <source>Total: %1</source>
+        <translation>Total: %1</translation>
+    </message>
+    <message>
+        <source>Start:</source>
+        <translation>Start:</translation>
+    </message>
+    <message>
+        <source>End:</source>
+        <translation>End:</translation>
+    </message>
+    <message>
+        <source> s</source>
+        <translation> s</translation>
+    </message>
+    <message>
+        <source>✂ Trim</source>
+        <translation>✂ Trim</translation>
+    </message>
+    <message>
+        <source>Trim video to selected boundaries</source>
+        <translation>Trim video to selected boundaries</translation>
+    </message>
+    <message>
+        <source>Trimming...</source>
+        <translation>Trimming...</translation>
+    </message>
+    <message>
+        <source>✓ Done</source>
+        <translation>✓ Done</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <source>Save, copy path to clipboard and close (Enter)</source>
+        <translation>Save, copy path to clipboard and close (Enter)</translation>
+    </message>
+    <message>
+        <source>Click to play in video player</source>
+        <translation>Click to play in video player</translation>
+    </message>
+    <message>
+        <source>Delete recording (Del)</source>
+        <translation>Delete recording (Del)</translation>
+    </message>
+    <message>
+        <source>Play in video player</source>
+        <translation>Play in video player</translation>
+    </message>
+    <message>
+        <source>Upload video to cloud and copy link</source>
+        <translation>Upload video to cloud and copy link</translation>
+    </message>
+    <message>
+        <source>Preparing video (trimming)...</source>
+        <translation>Preparing video (trimming)...</translation>
+    </message>
+    <message>
+        <source>Connecting to cloud server...</source>
+        <translation>Connecting to cloud server...</translation>
+    </message>
+    <message>
+        <source>Connecting...</source>
+        <translation>Connecting...</translation>
+    </message>
+    <message>
+        <source>Saving...</source>
+        <translation>Saving...</translation>
+    </message>
+    <message>
+        <source>File uploaded. Server generating link...</source>
+        <translation>File uploaded. Server generating link...</translation>
+    </message>
+</context>
 </TS>

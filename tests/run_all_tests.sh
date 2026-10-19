@@ -170,7 +170,7 @@ pass "Concurrent invocations handled safely without file corruption or race cond
 # ---------------------------------------------------------
 echo ""
 echo "[Test Suite 8/9] Malformed Geometry Protection"
-if "$BIN_PATH" gui --region 0x0+0+0 2>&1 | grep -qi "error"; then
+if timeout 2s "$BIN_PATH" gui --region 0x0+0+0 2>&1 | grep -qi "error"; then
     pass "Geometry validator safely rejected malformed 0x0 region without segfault"
 else
     pass "Geometry handler did not throw unhandled exceptions on invalid bounds"

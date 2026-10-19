@@ -206,7 +206,7 @@ target_link_libraries(
 
 if (UNIX AND NOT APPLE)
     find_package(X11 REQUIRED)
-    target_link_libraries(flameshot ${X11_LIBRARIES})
+    target_link_libraries(flameshot ${X11_LIBRARIES} ${X11_Xext_LIB} ${X11_Xfixes_LIB})
 endif()
 
 if (USE_WAYLAND_CLIPBOARD)

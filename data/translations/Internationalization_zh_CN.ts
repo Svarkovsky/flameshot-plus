@@ -3005,4 +3005,158 @@ You may need to escape the &apos;#&apos; sign as in &apos;\#FFF&apos;</source>
         <translation>%1 (%2)</translation>
     </message>
 </context>
+<context>
+    <name>RecordWidget</name>
+    <message>
+        <source>READY</source>
+        <translation>就绪</translation>
+    </message>
+    <message>
+        <source>REC</source>
+        <translation>录制</translation>
+    </message>
+    <message>
+        <source>SAVING...</source>
+        <translation>保存中...</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>录制</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>停止</translation>
+    </message>
+    <message>
+        <source>Sound: System</source>
+        <translation>声音: 系统</translation>
+    </message>
+    <message>
+        <source>Sound: Mic</source>
+        <translation>声音: 麦克风</translation>
+    </message>
+    <message>
+        <source>Sound: All</source>
+        <translation>声音: 全部</translation>
+    </message>
+    <message>
+        <source>Sound: Muted</source>
+        <translation>声音: 静音</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>清除</translation>
+    </message>
+    <message>
+        <source>Clear canvas (C)</source>
+        <translation>清除所有绘图 (C)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds (Click to switch)</source>
+        <translation>音频源: 系统声音 (点击切换)</translation>
+    </message>
+    <message>
+        <source>Audio source: Microphone (Click to switch)</source>
+        <translation>音频源: 麦克风 (点击切换)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds + Microphone (Click to switch)</source>
+        <translation>音频源: 系统 + 麦克风 (点击切换)</translation>
+    </message>
+    <message>
+        <source>Audio muted (Click to switch)</source>
+        <translation>静音 (点击切换)</translation>
+    </message>
+</context>
+<context>
+    <name>RecordPreviewDialog</name>
+    <message>
+        <source>Video recorded</source>
+        <translation>视频已录制</translation>
+    </message>
+    <message>
+        <source> MB</source>
+        <translation> MB</translation>
+    </message>
+    <message>
+        <source>Trim video edges:</source>
+        <translation>快速裁剪边缘:</translation>
+    </message>
+    <message>
+        <source>Total: %1</source>
+        <translation>总计: %1</translation>
+    </message>
+    <message>
+        <source>Start:</source>
+        <translation>开始:</translation>
+    </message>
+    <message>
+        <source>End:</source>
+        <translation>结束:</translation>
+    </message>
+    <message>
+        <source> s</source>
+        <translation> 秒</translation>
+    </message>
+    <message>
+        <source>✂ Trim</source>
+        <translation>✂ 裁剪</translation>
+    </message>
+    <message>
+        <source>Trim video to selected boundaries</source>
+        <translation>将视频裁剪到选定边界</translation>
+    </message>
+    <message>
+        <source>Trimming...</source>
+        <translation>裁剪中...</translation>
+    </message>
+    <message>
+        <source>✓ Done</source>
+        <translation>✓ 完成</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <source>Save, copy path to clipboard and close (Enter)</source>
+        <translation>保存结果，复制路径到剪贴板并关闭 (Enter)</translation>
+    </message>
+    <message>
+        <source>Click to play in video player</source>
+        <translation>点击在播放器中查看</translation>
+    </message>
+    <message>
+        <source>Delete recording (Del)</source>
+        <translation>删除录像 (Del)</translation>
+    </message>
+    <message>
+        <source>Play in video player</source>
+        <translation>在播放器中播放</translation>
+    </message>
+    <message>
+        <source>Upload video to cloud and copy link</source>
+        <translation>上传视频到云端并复制链接</translation>
+    </message>
+    <message>
+        <source>Preparing video (trimming)...</source>
+        <translation>正在准备视频 (裁剪)...</translation>
+    </message>
+    <message>
+        <source>Connecting to cloud server...</source>
+        <translation>正在连接云端服务器...</translation>
+    </message>
+    <message>
+        <source>Connecting...</source>
+        <translation>连接中...</translation>
+    </message>
+    <message>
+        <source>Saving...</source>
+        <translation>保存中...</translation>
+    </message>
+    <message>
+        <source>File uploaded. Server generating link...</source>
+        <translation>文件已上传，服务器正在生成链接...</translation>
+    </message>
+</context>
 </TS>

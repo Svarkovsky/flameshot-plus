@@ -92,7 +92,13 @@ void NullPointerUploader::handleReply(QNetworkReply* reply)
         }
 
         History history;
-        m_currentImageName = history.packFileName("0x0.st", "", m_currentImageName);
+        QString storageType = QStringLiteral("0x0.st");
+        if (response.contains(QLatin1String("catbox.moe"))) {
+            storageType = QStringLiteral("catbox");
+        } else if (response.contains(QLatin1String("litter"))) {
+            storageType = QStringLiteral("litterbox");
+        }
+        m_currentImageName = history.packFileName(storageType, "", m_currentImageName);
         history.save(pixmap(), m_currentImageName);
 
         FlameshotDaemon::copyToClipboard(response);
@@ -119,6 +125,8 @@ void NullPointerUploader::deleteImage(const QString& fileName, const QString& de
 {
     Q_UNUSED(fileName);
     Q_UNUSED(deleteToken);
-    notification()->showMessage(tr("Anonymous uploads expire automatically."));
+    if (notification()) {
+        notification()->showMessage(tr("Anonymous uploads expire automatically."));
+    }
     emit deleteOk();
 }

@@ -15,9 +15,11 @@
 #include "src/core/flameshot.h"
 #include "src/core/flameshotdaemon.h"
 #include "src/utils/confighandler.h"
+#include "src/utils/translationhelper.h"
 #include "src/utils/filenamehandler.h"
 #include "src/utils/pathinfo.h"
 #include "src/utils/valuehandler.h"
+#include "src/widgets/record/recordwidget.h"
 #include <QApplication>
 #include <QDir>
 #include <QLibraryInfo>
@@ -87,6 +89,9 @@ QSharedMemory* guiMutexLock()
 
 int main(int argc, char* argv[])
 {
+#if defined(Q_OS_LINUX) || defined(Q_OS_UNIX)
+    qunsetenv("DESKTOP_STARTUP_ID");
+#endif
 #ifdef Q_OS_LINUX
     wayland_hacks();
 #endif
@@ -108,27 +113,7 @@ int main(int argc, char* argv[])
 #endif
         QApplication::setStyle(new StyleOverride);
 
-        QTranslator translator, qtTranslator;
-        QStringList trPaths = PathInfo::translationsPaths();
-
-        for (const QString& path : trPaths) {
-            bool match = translator.load(QLocale(),
-                                         QStringLiteral("Internationalization"),
-                                         QStringLiteral("_"),
-                                         path);
-            if (match) {
-                break;
-            }
-        }
-
-        qtTranslator.load(
-          QLocale::system(),
-          "qt",
-          "_",
-          QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-
-        qApp->installTranslator(&translator);
-        qApp->installTranslator(&qtTranslator);
+        TranslationHelper::initTranslation();
         qApp->setAttribute(Qt::AA_DontCreateNativeWidgetSiblings, true);
 
         auto c = Flameshot::instance();
@@ -169,6 +154,8 @@ int main(int argc, char* argv[])
                                    QObject::tr("Configure") + " flameshot.");
     CommandArgument screenArgument(QStringLiteral("screen"),
                                    QObject::tr("Capture a single screen."));
+    CommandArgument recordArgument(QStringLiteral("record"),
+                                   QObject::tr("Start screen video recording."));
 
     // Options
     CommandOption pathOption(
@@ -295,6 +282,8 @@ int main(int argc, char* argv[])
     // Relationships
     parser.AddArgument(guiArgument);
     parser.AddArgument(screenArgument);
+    parser.AddArgument(recordArgument);
+    parser.AddOptions({ regionOption, useLastRegionOption }, recordArgument);
     parser.AddArgument(fullArgument);
     parser.AddArgument(launcherArgument);
     parser.AddArgument(configArgument);
@@ -344,6 +333,18 @@ int main(int argc, char* argv[])
     //--------------
     Flameshot::setOrigin(Flameshot::CLI);
     if (parser.isSet(helpOption) || parser.isSet(versionOption)) {
+    } else if (parser.isSet(recordArgument)) { // RECORD
+        delete qApp;
+        new QApplication(argc, argv);
+        QString region = parser.value(regionOption);
+        QRect area(100, 100, 800, 600);
+        if (!region.isEmpty()) {
+            area = Region().value(region).toRect();
+        } else if (parser.isSet(useLastRegionOption)) {
+            area = getLastRegion();
+        }
+        RecordWidget::startRecording(area);
+        qApp->exec();
     } else if (parser.isSet(launcherArgument)) { // LAUNCHER
         delete qApp;
         new QApplication(argc, argv);

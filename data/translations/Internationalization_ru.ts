@@ -994,6 +994,10 @@ Please solve them manually in the configuration file.</source>
 <context>
     <name>GeneralConf</name>
     <message>
+        <source>Interface Language:</source>
+        <translation>Язык интерфейса:</translation>
+    </message>
+    <message>
         <location filename="../../src/config/generalconf.cpp" line="156"/>
         <location filename="../../src/config/generalconf.cpp" line="326"/>
         <source>Import</source>
@@ -3138,6 +3142,288 @@ You can find me in the system tray.</source>
         <location filename="../../external/Qt-Color-Widgets/src/QtColorWidgets/swatch.cpp" line="833"/>
         <source>%1 (%2)</source>
         <translation>%1 (%2)</translation>
+    </message>
+</context>
+<context>
+    <name>RecordWidget</name>
+    <message>
+        <source>Current color (Right click on canvas opens palette)</source>
+        <translation>Текущий цвет (ПКМ на холсте открывает палитру)</translation>
+    </message>
+    <message>
+        <source>Change drawing color</source>
+        <translation>Выбрать цвет рисования</translation>
+    </message>
+    <message>
+        <source>Redo (Ctrl+Shift+Z)</source>
+        <translation>Повторить действие (Ctrl+Shift+Z)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Отменить действие (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Move panel (drag with mouse)</source>
+        <translation>Переместить панель (зажмите и тяните мышь)</translation>
+    </message>
+    <message>
+        <source>Recording area resolution</source>
+        <translation>Разрешение области записи</translation>
+    </message>
+    <message>
+        <source>Invert colors</source>
+        <translation>Инверсия цветов</translation>
+    </message>
+    <message>
+        <source>Pixelate (blur / hide area)</source>
+        <translation>Пикселизация (скрыть текст/область)</translation>
+    </message>
+    <message>
+        <source>Step counter (1, 2, 3...)</source>
+        <translation>Шаги с автосчетом (1, 2, 3...)</translation>
+    </message>
+    <message>
+        <source>Text (click canvas to type)</source>
+        <translation>Текст (кликните на холст для ввода)</translation>
+    </message>
+    <message>
+        <source>Highlighter</source>
+        <translation>Маркер-выделитель</translation>
+    </message>
+    <message>
+        <source>Rectangle (fill)</source>
+        <translation>Прямоугольник (сплошная заливка)</translation>
+    </message>
+    <message>
+        <source>Rectangle (outline)</source>
+        <translation>Прямоугольник (контур)</translation>
+    </message>
+    <message>
+        <source>Straight line</source>
+        <translation>Прямая линия</translation>
+    </message>
+    <message>
+        <source>Pencil (freehand drawing)</source>
+        <translation>Перо (произвольное рисование)</translation>
+    </message>
+    <message>
+        <source>Cancel recording</source>
+        <translation>Отмена записи</translation>
+    </message>
+    <message>
+        <source>Drawing tools (Esc to fold)</source>
+        <translation>Инструменты рисования на видео (Esc - свернуть)</translation>
+    </message>
+    <message>
+        <source>READY</source>
+        <translation>ГОТОВ</translation>
+    </message>
+    <message>
+        <source>REC</source>
+        <translation>ЗАПИСЬ</translation>
+    </message>
+    <message>
+        <source>SAVING...</source>
+        <translation>СОХРАНЕНИЕ...</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Запись</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Стоп</translation>
+    </message>
+    <message>
+        <source>Sound: System</source>
+        <translation>Звук: Система</translation>
+    </message>
+    <message>
+        <source>Sound: Mic</source>
+        <translation>Звук: Микрофон</translation>
+    </message>
+    <message>
+        <source>Sound: All</source>
+        <translation>Звук: Всё</translation>
+    </message>
+    <message>
+        <source>Sound: Muted</source>
+        <translation>Звук: Выкл</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Очистить</translation>
+    </message>
+    <message>
+        <source>Clear canvas (C)</source>
+        <translation>Стереть все рисунки (C)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds (Click to switch)</source>
+        <translation>Источник звука: Системные звуки (клик для переключения)</translation>
+    </message>
+    <message>
+        <source>Audio source: Microphone (Click to switch)</source>
+        <translation>Источник звука: Микрофон (клик для переключения)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds + Microphone (Click to switch)</source>
+        <translation>Источник звука: Система + Микрофон (клик для переключения)</translation>
+    </message>
+    <message>
+        <source>Audio muted (Click to switch)</source>
+        <translation>Звук отключен (клик для переключения)</translation>
+    </message>
+</context>
+<context>
+    <name>RecordPreviewDialog</name>
+    <message>
+        <source>Cloud upload error</source>
+        <translation>Ошибка отправки в облако</translation>
+    </message>
+    <message>
+        <source>Click to open video in browser</source>
+        <translation>Кликните, чтобы открыть видео в браузере</translation>
+    </message>
+    <message>
+        <source>Video uploaded to cloud!</source>
+        <translation>Видео загружено в облако!</translation>
+    </message>
+    <message>
+        <source>Uploading: %1 / %2 MB (%3%)</source>
+        <translation>Отправка: %1 / %2 МБ (%3%)</translation>
+    </message>
+    <message>
+        <source>Failed to open video file.</source>
+        <translation>Не удалось открыть видеофайл.</translation>
+    </message>
+    <message>
+        <source>File error</source>
+        <translation>Ошибка файла</translation>
+    </message>
+    <message>
+        <source>Path copied to clipboard: %1</source>
+        <translation>Путь скопирован в буфер: %1</translation>
+    </message>
+    <message>
+        <source>Video saved</source>
+        <translation>Видео сохранено</translation>
+    </message>
+    <message>
+        <source>File moved to trash.</source>
+        <translation>Файл был перемещен в корзину.</translation>
+    </message>
+    <message>
+        <source>Recording deleted</source>
+        <translation>Запись удалена</translation>
+    </message>
+    <message>
+        <source>Duration: %1</source>
+        <translation>Длительность: %1</translation>
+    </message>
+    <message>
+        <source>Video trimmed</source>
+        <translation>Видео обрезано</translation>
+    </message>
+    <message>
+        <source>🎬 Click to play in video player</source>
+        <translation>🎬 Нажмите для просмотра в плеере</translation>
+    </message>
+    <message>
+        <source>Trimming video...</source>
+        <translation>Выполняется обрезка видео...</translation>
+    </message>
+    <message>
+        <source>Video Preview</source>
+        <translation>Предпросмотр видео</translation>
+    </message>
+    <message>
+        <source>Video recorded</source>
+        <translation>Видео записано</translation>
+    </message>
+    <message>
+        <source> MB</source>
+        <translation> МБ</translation>
+    </message>
+    <message>
+        <source>Trim video edges:</source>
+        <translation>Быстрая обрезка краев:</translation>
+    </message>
+    <message>
+        <source>Total: %1</source>
+        <translation>Итог: %1</translation>
+    </message>
+    <message>
+        <source>Start:</source>
+        <translation>Старт:</translation>
+    </message>
+    <message>
+        <source>End:</source>
+        <translation>Конец:</translation>
+    </message>
+    <message>
+        <source> s</source>
+        <translation> с</translation>
+    </message>
+    <message>
+        <source>✂ Trim</source>
+        <translation>✂ Обрезать</translation>
+    </message>
+    <message>
+        <source>Trim video to selected boundaries</source>
+        <translation>Обрезать видео по выбранным границам</translation>
+    </message>
+    <message>
+        <source>Trimming...</source>
+        <translation>Обрезка...</translation>
+    </message>
+    <message>
+        <source>✓ Done</source>
+        <translation>✓ Готово</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Сохранить</translation>
+    </message>
+    <message>
+        <source>Save, copy path to clipboard and close (Enter)</source>
+        <translation>Сохранить результат, скопировать путь в буфер и закрыть (Enter)</translation>
+    </message>
+    <message>
+        <source>Click to play in video player</source>
+        <translation>Кликните для просмотра в плеере</translation>
+    </message>
+    <message>
+        <source>Delete recording (Del)</source>
+        <translation>Удалить запись в корзину (Del)</translation>
+    </message>
+    <message>
+        <source>Play in video player</source>
+        <translation>Воспроизвести в видеоплеере</translation>
+    </message>
+    <message>
+        <source>Upload video to cloud and copy link</source>
+        <translation>Загрузить видео в облако и скопировать ссылку</translation>
+    </message>
+    <message>
+        <source>Preparing video (trimming)...</source>
+        <translation>Подготовка видео (обрезка)...</translation>
+    </message>
+    <message>
+        <source>Connecting to cloud server...</source>
+        <translation>Соединение с облачным сервером...</translation>
+    </message>
+    <message>
+        <source>Connecting...</source>
+        <translation>Связь...</translation>
+    </message>
+    <message>
+        <source>Saving...</source>
+        <translation>Сохранение...</translation>
+    </message>
+    <message>
+        <source>File uploaded. Server generating link...</source>
+        <translation>Файл передан. Сервер генерирует ссылку...</translation>
     </message>
 </context>
 </TS>

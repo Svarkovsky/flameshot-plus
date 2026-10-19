@@ -2944,4 +2944,158 @@ Vous devrez probablement remplacer le signe &apos;#&apos; par &apos;\#FFF&apos;<
         <translation>%1 (%2)</translation>
     </message>
 </context>
+<context>
+    <name>RecordWidget</name>
+    <message>
+        <source>READY</source>
+        <translation>PRÊT</translation>
+    </message>
+    <message>
+        <source>REC</source>
+        <translation>ENREG.</translation>
+    </message>
+    <message>
+        <source>SAVING...</source>
+        <translation>ENREGISTREMENT...</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Enregistrer</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Arrêter</translation>
+    </message>
+    <message>
+        <source>Sound: System</source>
+        <translation>Son : Système</translation>
+    </message>
+    <message>
+        <source>Sound: Mic</source>
+        <translation>Son : Microphone</translation>
+    </message>
+    <message>
+        <source>Sound: All</source>
+        <translation>Son : Tout</translation>
+    </message>
+    <message>
+        <source>Sound: Muted</source>
+        <translation>Son : Muet</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Effacer</translation>
+    </message>
+    <message>
+        <source>Clear canvas (C)</source>
+        <translation>Effacer tous les dessins (C)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds (Click to switch)</source>
+        <translation>Source audio : Sons système (Cliquer pour changer)</translation>
+    </message>
+    <message>
+        <source>Audio source: Microphone (Click to switch)</source>
+        <translation>Source audio : Microphone (Cliquer pour changer)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds + Microphone (Click to switch)</source>
+        <translation>Source audio : Système + Microphone (Cliquer pour changer)</translation>
+    </message>
+    <message>
+        <source>Audio muted (Click to switch)</source>
+        <translation>Audio coupé (Cliquer pour changer)</translation>
+    </message>
+</context>
+<context>
+    <name>RecordPreviewDialog</name>
+    <message>
+        <source>Video recorded</source>
+        <translation>Vidéo enregistrée</translation>
+    </message>
+    <message>
+        <source> MB</source>
+        <translation> Mo</translation>
+    </message>
+    <message>
+        <source>Trim video edges:</source>
+        <translation>Découper les bords de la vidéo :</translation>
+    </message>
+    <message>
+        <source>Total: %1</source>
+        <translation>Total : %1</translation>
+    </message>
+    <message>
+        <source>Start:</source>
+        <translation>Début :</translation>
+    </message>
+    <message>
+        <source>End:</source>
+        <translation>Fin :</translation>
+    </message>
+    <message>
+        <source> s</source>
+        <translation> s</translation>
+    </message>
+    <message>
+        <source>✂ Trim</source>
+        <translation>✂ Découper</translation>
+    </message>
+    <message>
+        <source>Trim video to selected boundaries</source>
+        <translation>Découper la vidéo aux limites sélectionnées</translation>
+    </message>
+    <message>
+        <source>Trimming...</source>
+        <translation>Découpage...</translation>
+    </message>
+    <message>
+        <source>✓ Done</source>
+        <translation>✓ Terminé</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Enregistrer</translation>
+    </message>
+    <message>
+        <source>Save, copy path to clipboard and close (Enter)</source>
+        <translation>Enregistrer le résultat, copier le chemin et fermer (Entrée)</translation>
+    </message>
+    <message>
+        <source>Click to play in video player</source>
+        <translation>Cliquer pour lire dans le lecteur</translation>
+    </message>
+    <message>
+        <source>Delete recording (Del)</source>
+        <translation>Supprimer l'enregistrement (Suppr)</translation>
+    </message>
+    <message>
+        <source>Play in video player</source>
+        <translation>Lire dans le lecteur vidéo</translation>
+    </message>
+    <message>
+        <source>Upload video to cloud and copy link</source>
+        <translation>Téléverser dans le cloud et copier le lien</translation>
+    </message>
+    <message>
+        <source>Preparing video (trimming)...</source>
+        <translation>Préparation de la vidéo (découpage)...</translation>
+    </message>
+    <message>
+        <source>Connecting to cloud server...</source>
+        <translation>Connexion au serveur cloud...</translation>
+    </message>
+    <message>
+        <source>Connecting...</source>
+        <translation>Connexion...</translation>
+    </message>
+    <message>
+        <source>Saving...</source>
+        <translation>Enregistrement...</translation>
+    </message>
+    <message>
+        <source>File uploaded. Server generating link...</source>
+        <translation>Fichier téléversé. Le serveur génère le lien...</translation>
+    </message>
+</context>
 </TS>

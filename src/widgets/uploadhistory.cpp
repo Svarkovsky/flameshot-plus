@@ -72,11 +72,24 @@ void UploadHistory::addLine(const QString& path, const QString& fileName)
     History history;
     HistoryFileName unpackFileName = history.unpackFileName(fileName);
 
-    QString url = ImgUploaderManager(this).url() + unpackFileName.file;
+    QString url;
+    if (unpackFileName.type == QStringLiteral("catbox")) {
+        url = QStringLiteral("https://files.catbox.moe/") + unpackFileName.file;
+    } else if (unpackFileName.type == QStringLiteral("litterbox")) {
+        url = QStringLiteral("https://litter.catbox.moe/") + unpackFileName.file;
+    } else if (unpackFileName.type == QStringLiteral("0x0.st")) {
+        url = QStringLiteral("https://0x0.st/") + unpackFileName.file;
+    } else if (unpackFileName.file.startsWith(QStringLiteral("http://")) || unpackFileName.file.startsWith(QStringLiteral("https://"))) {
+        url = unpackFileName.file;
+    } else {
+        url = ImgUploaderManager(this).url() + unpackFileName.file;
+    }
 
     // load pixmap
     QPixmap pixmap;
-    pixmap.load(fullFileName, "png");
+    if (!pixmap.load(fullFileName, "PNG")) {
+        pixmap.load(fullFileName);
+    }
     scaleThumbnail(pixmap);
 
     // get file info
@@ -91,7 +104,7 @@ void UploadHistory::addLine(const QString& path, const QString& fileName)
         if (ui->historyContainer->count() <= 1) {
             setEmptyMessage();
         }
-        delete line;
+        line->deleteLater();
     });
 
     ui->historyContainer->addWidget(line);

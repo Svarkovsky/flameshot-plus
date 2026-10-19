@@ -28,7 +28,6 @@ private slots:
     void saveLastRegion(bool checked);
     void showSidePanelButtonChanged(bool checked);
     void showDesktopNotificationChanged(bool checked);
-    void checkForUpdatesChanged(bool checked);
     void allowMultipleGuiInstancesChanged(bool checked);
     void autoCloseIdleDaemonChanged(bool checked);
     void autostartChanged(bool checked);
@@ -44,6 +43,7 @@ private slots:
     void uploadClientKeyEdited();
     void useJpgForClipboardChanged(bool checked);
     void setSaveAsFileExtension(QString extension);
+    void uiLanguageChanged(int index);
 
 private:
     const QString chooseFolder(const QString currentPath = "");
@@ -52,7 +52,6 @@ private:
     void initAntialiasingPinZoom();
     void initAutoCloseIdleDaemon();
     void initAutostart();
-    void initCheckForUpdates();
     void initConfigButtons();
     void initCopyAndCloseAfterUpload();
     void initCopyOnDoubleClick();
@@ -74,6 +73,7 @@ private:
     void initUploadHistoryMax();
     void initUploadClientSecret();
     void initSaveLastRegion();
+    void initUiLanguage();
 
     void _updateComponents(bool allowEmptySavePath);
 
@@ -85,7 +85,6 @@ private:
     QCheckBox* m_showTray;
     QCheckBox* m_helpMessage;
     QCheckBox* m_sidePanelButton;
-    QCheckBox* m_checkForUpdates;
     QCheckBox* m_allowMultipleGuiInstances;
     QCheckBox* m_autoCloseIdleDaemon;
     QCheckBox* m_autostart;
@@ -108,6 +107,7 @@ private:
     QSpinBox* m_uploadHistoryMax;
     QSpinBox* m_undoLimit;
     QComboBox* m_setSaveAsFileExtension;
+    QComboBox* m_uiLanguageCombo;
     QCheckBox* m_predefinedColorPaletteLarge;
     QCheckBox* m_showMagnifier;
     QCheckBox* m_squareMagnifier;

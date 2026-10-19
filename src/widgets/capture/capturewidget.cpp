@@ -851,7 +851,7 @@ void CaptureWidget::keyPressEvent(QKeyEvent* e)
     if (e->key() == Qt::Key_W || e->key() == Qt::Key_Tab) {
         QRect winGeom;
         QString title, appClass;
-        QPoint globalPos = mapToGlobal(m_context.mousePos);
+        QPoint globalPos = QCursor::pos();
         if (WindowDetector::detectWindowAt(globalPos, winGeom, title, appClass)) {
             QRect localGeom(mapFromGlobal(winGeom.topLeft()), winGeom.size());
             m_selection->setVisible(true);

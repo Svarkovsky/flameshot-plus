@@ -3140,4 +3140,158 @@ You can find me in the system tray.</source>
         <translation>%1 (%2)</translation>
     </message>
 </context>
+<context>
+    <name>RecordWidget</name>
+    <message>
+        <source>READY</source>
+        <translation>ГОТОВИЙ</translation>
+    </message>
+    <message>
+        <source>REC</source>
+        <translation>ЗАПИС</translation>
+    </message>
+    <message>
+        <source>SAVING...</source>
+        <translation>ЗБЕРЕЖЕННЯ...</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Запис</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Стоп</translation>
+    </message>
+    <message>
+        <source>Sound: System</source>
+        <translation>Звук: Система</translation>
+    </message>
+    <message>
+        <source>Sound: Mic</source>
+        <translation>Звук: Мікрофон</translation>
+    </message>
+    <message>
+        <source>Sound: All</source>
+        <translation>Звук: Все</translation>
+    </message>
+    <message>
+        <source>Sound: Muted</source>
+        <translation>Звук: Вимк</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Очистити</translation>
+    </message>
+    <message>
+        <source>Clear canvas (C)</source>
+        <translation>Очистити всі малюнки (C)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds (Click to switch)</source>
+        <translation>Джерело звуку: Системні звуки (клік для перемикання)</translation>
+    </message>
+    <message>
+        <source>Audio source: Microphone (Click to switch)</source>
+        <translation>Джерело звуку: Мікрофон (клік для перемикання)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds + Microphone (Click to switch)</source>
+        <translation>Джерело звуку: Система + Мікрофон (клік для перемикання)</translation>
+    </message>
+    <message>
+        <source>Audio muted (Click to switch)</source>
+        <translation>Звук вимкнено (клік для перемикання)</translation>
+    </message>
+</context>
+<context>
+    <name>RecordPreviewDialog</name>
+    <message>
+        <source>Video recorded</source>
+        <translation>Відео записано</translation>
+    </message>
+    <message>
+        <source> MB</source>
+        <translation> МБ</translation>
+    </message>
+    <message>
+        <source>Trim video edges:</source>
+        <translation>Швидке обрізання країв:</translation>
+    </message>
+    <message>
+        <source>Total: %1</source>
+        <translation>Разом: %1</translation>
+    </message>
+    <message>
+        <source>Start:</source>
+        <translation>Початок:</translation>
+    </message>
+    <message>
+        <source>End:</source>
+        <translation>Кінець:</translation>
+    </message>
+    <message>
+        <source> s</source>
+        <translation> с</translation>
+    </message>
+    <message>
+        <source>✂ Trim</source>
+        <translation>✂ Обрізати</translation>
+    </message>
+    <message>
+        <source>Trim video to selected boundaries</source>
+        <translation>Обрізати відео за обраними межами</translation>
+    </message>
+    <message>
+        <source>Trimming...</source>
+        <translation>Обрізання...</translation>
+    </message>
+    <message>
+        <source>✓ Done</source>
+        <translation>✓ Готово</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Зберегти</translation>
+    </message>
+    <message>
+        <source>Save, copy path to clipboard and close (Enter)</source>
+        <translation>Зберегти результат, скопіювати шлях у буфер і закрити (Enter)</translation>
+    </message>
+    <message>
+        <source>Click to play in video player</source>
+        <translation>Клікніть для перегляду у плеєрі</translation>
+    </message>
+    <message>
+        <source>Delete recording (Del)</source>
+        <translation>Видалити запис у кошик (Del)</translation>
+    </message>
+    <message>
+        <source>Play in video player</source>
+        <translation>Відтворити у відеоплеєрі</translation>
+    </message>
+    <message>
+        <source>Upload video to cloud and copy link</source>
+        <translation>Завантажити відео в хмару та скопіювати посилання</translation>
+    </message>
+    <message>
+        <source>Preparing video (trimming)...</source>
+        <translation>Підготовка відео (обрізання)...</translation>
+    </message>
+    <message>
+        <source>Connecting to cloud server...</source>
+        <translation>З'єднання з хмарним сервером...</translation>
+    </message>
+    <message>
+        <source>Connecting...</source>
+        <translation>Зв'язок...</translation>
+    </message>
+    <message>
+        <source>Saving...</source>
+        <translation>Збереження...</translation>
+    </message>
+    <message>
+        <source>File uploaded. Server generating link...</source>
+        <translation>Файл передано. Сервер генерує посилання...</translation>
+    </message>
+</context>
 </TS>

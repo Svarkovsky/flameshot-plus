@@ -9,6 +9,7 @@ target_sources(
           request.h
           strfparse.h
           windowdetector.h
+          translationhelper.h
 )
 
 target_sources(
@@ -29,4 +30,5 @@ target_sources(
           strfparse.cpp
           request.cpp
           windowdetector.cpp
+          translationhelper.cpp
 )

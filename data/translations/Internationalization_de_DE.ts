@@ -2957,4 +2957,158 @@ Eventuell muss das &apos;#&apos; Zeichen als &apos;\#FFF&apos; maskiert werden</
         <translation>%1 (%2)</translation>
     </message>
 </context>
+<context>
+    <name>RecordWidget</name>
+    <message>
+        <source>READY</source>
+        <translation>BEREIT</translation>
+    </message>
+    <message>
+        <source>REC</source>
+        <translation>AUFNAHME</translation>
+    </message>
+    <message>
+        <source>SAVING...</source>
+        <translation>SPEICHERN...</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Aufnahme</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Stopp</translation>
+    </message>
+    <message>
+        <source>Sound: System</source>
+        <translation>Ton: System</translation>
+    </message>
+    <message>
+        <source>Sound: Mic</source>
+        <translation>Ton: Mikrofon</translation>
+    </message>
+    <message>
+        <source>Sound: All</source>
+        <translation>Ton: Alles</translation>
+    </message>
+    <message>
+        <source>Sound: Muted</source>
+        <translation>Ton: Stumm</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Löschen</translation>
+    </message>
+    <message>
+        <source>Clear canvas (C)</source>
+        <translation>Alle Zeichnungen löschen (C)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds (Click to switch)</source>
+        <translation>Audioquelle: Systemtöne (Klicken zum Umschalten)</translation>
+    </message>
+    <message>
+        <source>Audio source: Microphone (Click to switch)</source>
+        <translation>Audioquelle: Mikrofon (Klicken zum Umschalten)</translation>
+    </message>
+    <message>
+        <source>Audio source: System sounds + Microphone (Click to switch)</source>
+        <translation>Audioquelle: System + Mikrofon (Klicken zum Umschalten)</translation>
+    </message>
+    <message>
+        <source>Audio muted (Click to switch)</source>
+        <translation>Ton stummgeschaltet (Klicken zum Umschalten)</translation>
+    </message>
+</context>
+<context>
+    <name>RecordPreviewDialog</name>
+    <message>
+        <source>Video recorded</source>
+        <translation>Video aufgenommen</translation>
+    </message>
+    <message>
+        <source> MB</source>
+        <translation> MB</translation>
+    </message>
+    <message>
+        <source>Trim video edges:</source>
+        <translation>Videoränder zuschneiden:</translation>
+    </message>
+    <message>
+        <source>Total: %1</source>
+        <translation>Gesamt: %1</translation>
+    </message>
+    <message>
+        <source>Start:</source>
+        <translation>Start:</translation>
+    </message>
+    <message>
+        <source>End:</source>
+        <translation>Ende:</translation>
+    </message>
+    <message>
+        <source> s</source>
+        <translation> s</translation>
+    </message>
+    <message>
+        <source>✂ Trim</source>
+        <translation>✂ Zuschneiden</translation>
+    </message>
+    <message>
+        <source>Trim video to selected boundaries</source>
+        <translation>Video auf ausgewählte Grenzen zuschneiden</translation>
+    </message>
+    <message>
+        <source>Trimming...</source>
+        <translation>Wird zugeschnitten...</translation>
+    </message>
+    <message>
+        <source>✓ Done</source>
+        <translation>✓ Fertig</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Speichern</translation>
+    </message>
+    <message>
+        <source>Save, copy path to clipboard and close (Enter)</source>
+        <translation>Ergebnis speichern, Pfad kopieren und schließen (Enter)</translation>
+    </message>
+    <message>
+        <source>Click to play in video player</source>
+        <translation>Klicken zum Abspielen im Player</translation>
+    </message>
+    <message>
+        <source>Delete recording (Del)</source>
+        <translation>Aufnahme löschen (Entf)</translation>
+    </message>
+    <message>
+        <source>Play in video player</source>
+        <translation>Im Videoplayer abspielen</translation>
+    </message>
+    <message>
+        <source>Upload video to cloud and copy link</source>
+        <translation>Video in Cloud hochladen und Link kopieren</translation>
+    </message>
+    <message>
+        <source>Preparing video (trimming)...</source>
+        <translation>Video vorbereiten (zuschneiden)...</translation>
+    </message>
+    <message>
+        <source>Connecting to cloud server...</source>
+        <translation>Verbindung zum Cloud-Server wird hergestellt...</translation>
+    </message>
+    <message>
+        <source>Connecting...</source>
+        <translation>Verbinden...</translation>
+    </message>
+    <message>
+        <source>Saving...</source>
+        <translation>Speichern...</translation>
+    </message>
+    <message>
+        <source>File uploaded. Server generating link...</source>
+        <translation>Datei hochgeladen. Server generiert Link...</translation>
+    </message>
+</context>
 </TS>

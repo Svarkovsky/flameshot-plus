@@ -77,6 +77,7 @@ public:
                          bool)
     CONFIG_GETTER_SETTER(fontFamily, setFontFamily, QString)
     CONFIG_GETTER_SETTER(showHelp, setShowHelp, bool)
+    CONFIG_GETTER_SETTER(uiLanguage, setUiLanguage, QString)
     CONFIG_GETTER_SETTER(showSidePanelButton, setShowSidePanelButton, bool)
     CONFIG_GETTER_SETTER(showDesktopNotification,
                          setShowDesktopNotification,

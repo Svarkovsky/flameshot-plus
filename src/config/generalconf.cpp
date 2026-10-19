@@ -3,6 +3,7 @@
 #include "generalconf.h"
 #include "src/core/flameshot.h"
 #include "src/utils/confighandler.h"
+#include "src/utils/translationhelper.h"
 #include <QCheckBox>
 #include <QComboBox>
 #include <QFile>
@@ -32,13 +33,13 @@ GeneralConf::GeneralConf(QWidget* parent)
     // It must be initialized before the checkboxes.
     initScrollArea();
 
+    initUiLanguage();
     initShowHelp();
     initSaveLastRegion();
     initShowSidePanelButton();
     initShowDesktopNotification();
     initShowTrayIcon();
     initHistoryConfirmationToDelete();
-    initCheckForUpdates();
     initAutostart();
     initShowStartupLaunchMessage();
     initCopyAndCloseAfterUpload();
@@ -80,7 +81,6 @@ void GeneralConf::_updateComponents(bool allowEmptySavePath)
     m_uploadWithoutConfirmation->setChecked(config.uploadWithoutConfirmation());
     m_historyConfirmationToDelete->setChecked(
       config.historyConfirmationToDelete());
-    m_checkForUpdates->setChecked(config.checkForUpdates());
     m_allowMultipleGuiInstances->setChecked(config.allowMultipleGuiInstances());
     m_showMagnifier->setChecked(config.showMagnifier());
     m_squareMagnifier->setChecked(config.squareMagnifier());
@@ -99,6 +99,16 @@ void GeneralConf::_updateComponents(bool allowEmptySavePath)
 
     if (allowEmptySavePath || !config.savePath().isEmpty()) {
         m_savePath->setText(config.savePath());
+    }
+
+    if (m_uiLanguageCombo) {
+        QString curLang = config.uiLanguage();
+        int idx = m_uiLanguageCombo->findData(curLang);
+        if (idx >= 0) {
+            m_uiLanguageCombo->blockSignals(true);
+            m_uiLanguageCombo->setCurrentIndex(idx);
+            m_uiLanguageCombo->blockSignals(false);
+        }
     }
 #if defined(Q_OS_LINUX) || defined(Q_OS_UNIX)
     m_showTray->setChecked(!config.disabledTrayIcon());
@@ -130,10 +140,6 @@ void GeneralConf::showDesktopNotificationChanged(bool checked)
     ConfigHandler().setShowDesktopNotification(checked);
 }
 
-void GeneralConf::checkForUpdatesChanged(bool checked)
-{
-    ConfigHandler().setCheckForUpdates(checked);
-}
 
 void GeneralConf::allowMultipleGuiInstancesChanged(bool checked)
 {
@@ -337,17 +343,6 @@ void GeneralConf::initConfigButtons()
             &GeneralConf::resetConfiguration);
 }
 
-void GeneralConf::initCheckForUpdates()
-{
-    m_checkForUpdates = new QCheckBox(tr("Automatic check for updates"), this);
-    m_checkForUpdates->setToolTip(tr("Check for updates automatically"));
-    m_scrollAreaLayout->addWidget(m_checkForUpdates);
-
-    connect(m_checkForUpdates,
-            &QCheckBox::clicked,
-            this,
-            &GeneralConf::checkForUpdatesChanged);
-}
 
 void GeneralConf::initAllowMultipleGuiInstances()
 {
@@ -701,4 +696,43 @@ void GeneralConf::setSaveAsFileExtension(QString extension)
 void GeneralConf::useJpgForClipboardChanged(bool checked)
 {
     ConfigHandler().setUseJpgForClipboard(checked);
+}
+
+void GeneralConf::initUiLanguage()
+{
+    auto* langLayout = new QHBoxLayout();
+    auto* langLabel = new QLabel(tr("Interface Language:"), this);
+    langLabel->setStyleSheet(QStringLiteral("font-weight: bold; font-size: 13px;"));
+    langLayout->addWidget(langLabel);
+
+    m_uiLanguageCombo = new QComboBox(this);
+    m_uiLanguageCombo->setMinimumWidth(260);
+
+    const auto languages = TranslationHelper::availableLanguages();
+    QString curLang = ConfigHandler().uiLanguage();
+    int selectedIdx = 0;
+
+    for (int i = 0; i < languages.size(); ++i) {
+        const auto& pair = languages.at(i);
+        m_uiLanguageCombo->addItem(pair.second, pair.first);
+        if (pair.first == curLang) {
+            selectedIdx = i;
+        }
+    }
+    m_uiLanguageCombo->setCurrentIndex(selectedIdx);
+
+    connect(m_uiLanguageCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &GeneralConf::uiLanguageChanged);
+
+    langLayout->addWidget(m_uiLanguageCombo);
+    langLayout->addStretch();
+
+    m_scrollAreaLayout->addLayout(langLayout);
+}
+
+void GeneralConf::uiLanguageChanged(int index)
+{
+    if (index < 0 || !m_uiLanguageCombo) return;
+    QString code = m_uiLanguageCombo->itemData(index).toString();
+    TranslationHelper::setLanguage(code);
 }

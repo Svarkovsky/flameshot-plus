@@ -49,13 +49,13 @@ Architecture: amd64
 Provides: flameshot
 Conflicts: flameshot
 Replaces: flameshot
-Depends: libc6, libqt5core5a, libqt5gui5, libqt5widgets5, libqt5svg5, libqt5network5, libqt5dbus5, libx11-6, ffmpeg
-Maintainer: Svarkovsky <ivansvarkovsky@gmail.com>
+Depends: libc6, libqt5core5a, libqt5gui5, libqt5widgets5, libqt5svg5, libqt5network5, libqt5dbus5, libx11-6, libxext6, libxfixes3, ffmpeg
+Maintainer: Ivan Svarkovsky <https://github.com/Svarkovsky/flameshot-plus>
 Homepage: https://github.com/Svarkovsky/flameshot-plus
 Description: Powerful screen annotation, smart window snapping, and video recording
  Flameshot + is an extended and optimized fork of Flameshot.
- Adds integrated desktop video/audio recording to MP4, smart window
- detection, persistent area coordinates, and default WebP screenshots.
+ Adds live on-video drawing annotations, integrated desktop video/audio
+ recording to MP4, smart window detection, and default WebP screenshots.
 EOF
 
 # Install copyright documentation
@@ -97,11 +97,21 @@ exit 0
 EOF
 chmod 755 "$STAGE_DIR/DEBIAN/postrm"
 
-# Update desktop file name and exec
+# Update desktop file name, exec path, and categories
 if [ -f "$STAGE_DIR/usr/share/applications/org.flameshot.Flameshot.desktop" ]; then
+    sed -i 's|^Exec=.*|Exec=/usr/bin/flameshot|' "$STAGE_DIR/usr/share/applications/org.flameshot.Flameshot.desktop"
     sed -i 's/^Name=.*/Name=Flameshot +/' "$STAGE_DIR/usr/share/applications/org.flameshot.Flameshot.desktop"
     sed -i 's/^Comment=.*/Comment=Screen annotation and video recording/' "$STAGE_DIR/usr/share/applications/org.flameshot.Flameshot.desktop"
+    sed -i 's/^Categories=.*/Categories=Graphics;Utility;2DGraphics;RasterGraphics;/' "$STAGE_DIR/usr/share/applications/org.flameshot.Flameshot.desktop"
+    
 fi
+
+# Install pixmaps for legacy and lightweight window managers
+mkdir -p "$STAGE_DIR/usr/share/pixmaps"
+cp "$REPO_ROOT/data/img/hicolor/128x128/apps/flameshot.png" "$STAGE_DIR/usr/share/pixmaps/flameshot.png"
+cp "$REPO_ROOT/data/img/hicolor/128x128/apps/flameshot.png" "$STAGE_DIR/usr/share/pixmaps/org.flameshot.Flameshot.png"
+cp "$REPO_ROOT/data/img/hicolor/128x128/apps/flameshot.png" "$STAGE_DIR/usr/share/pixmaps/flameshot-plus.png"
+
 
 echo "=== Building deb package ==="
 mkdir -p "$OUTPUT_DIR"

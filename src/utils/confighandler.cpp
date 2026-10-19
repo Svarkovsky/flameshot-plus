@@ -77,6 +77,7 @@ static QMap<class QString, QSharedPointer<ValueHandler>>
     OPTION("showHelp"                    ,Bool               ( true          )),
     OPTION("showSidePanelButton"         ,Bool               ( true          )),
     OPTION("showDesktopNotification"     ,Bool               ( true          )),
+    OPTION("uiLanguage"                  ,String             ( QString()     )),
     OPTION("disabledTrayIcon"            ,Bool               ( false         )),
     OPTION("historyConfirmationToDelete" ,Bool               ( true          )),
     OPTION("checkForUpdates"             ,Bool               ( false         )),

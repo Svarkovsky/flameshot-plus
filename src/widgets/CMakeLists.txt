@@ -25,6 +25,10 @@ target_sources(
         imguploaddialog.h
         capture/capturetoolobjects.h
         record/recordwidget.h
+        record/recordcanvaswidget.h
+        record/audiovumeterwidget.h
+        record/recordpreviewdialog.h
+        record/blocktrimslider.h
 )
 
 target_sources(
@@ -44,4 +48,8 @@ target_sources(
         imguploaddialog.cpp
         capture/capturetoolobjects.cpp
         record/recordwidget.cpp
+        record/recordcanvaswidget.cpp
+        record/audiovumeterwidget.cpp
+        record/recordpreviewdialog.cpp
+        record/blocktrimslider.cpp
 )

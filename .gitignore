@@ -72,3 +72,4 @@ data/flatpak/.flatpak-builder
 
 #MacOS Crap
 .DS_Store
+flameshot-plus
