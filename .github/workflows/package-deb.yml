@@ -2,10 +2,10 @@ name: Build & Package (Debian 12 .deb)
 
 on:
   push:
-    branches: [ main, 'chatbox/**', 'feature/**' ]
+    branches: [ main, 'v*', 'feature/**', 'release/**' ]
     tags: [ 'v*' ]
   pull_request:
-    branches: [ main, 'chatbox/**', 'feature/**' ]
+    branches: [ main, 'v*', 'feature/**', 'release/**' ]
   workflow_dispatch:
 
 permissions:
