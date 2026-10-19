@@ -1,15 +1,20 @@
 ## Flameshot + ${VERSION}
 
-Lightweight, optimized screen annotation with smart window detection, default WebP capture, integrated video/audio recording, and free anonymous cloud sharing.
+Lightweight, optimized screen annotation, smart window detection, WebP capture, integrated video recording with live on-screen drawing annotations, hardware audio VU-meter, instant lossless trimming, and high-capacity cloud sharing.
 
-### Key Features
+### What is New in This Release
 
+- **Live On-Screen Drawing During Video Recording:** Complete drawing suite directly over the live recording stream with zero flicker and full alpha blending: freehand pencil, arrows, straight lines, rectangles (outline & fill), circles, semi-transparent highlighter, direct text typing on video, auto-incrementing step counter badges (1, 2, 3...), dynamic pixelation/blur, color inversion, undo/redo (`Ctrl+Z` / `Ctrl+Shift+Z`), and instant canvas wipe (`C`).
+- **Hardware-Accurate Audio VU-Meter:** Multi-segment real-time VU-meter on the floating HUD providing visual volume level feedback for microphone and system audio monitoring.
+- **Sub-Second Lossless Stream Trimming:** Instant boundary cutting using direct ffmpeg stream-copy (`-c copy`) in ~0.2 seconds without CPU-intensive re-encoding or quality degradation. Includes an intuitive block-segmented timeline slider.
+- **High-Capacity Dual-Tier Cloud Sharing (up to 1 GB):** Automatic routing for screenshots and videos: standard Catbox cloud for files up to 200 MB, and high-capacity Litterbox cloud for large recordings up to 1 GB. Features live transfer progress (MB sent / total MB / percentage) and instant clipboard link copying.
+- **Full In-App Multi-Language Localization (35 Languages):** Built-in language selector in General Configuration supporting English, Russian, Ukrainian, German, French, Spanish, Italian, Polish, Chinese, Japanese, and 25+ more locales with complete translation coverage.
+- **EWMH Hardware-Accurate Window Snapping:** Window snapping via `_NET_CLIENT_LIST_STACKING` that detects genuine application windows with window manager frames, automatically ignoring Flameshot's own capture overlay.
+- **Enhanced Uploads History:** Robust "Latest Uploads" dialog supporting both screenshots and video recordings with direct URL copying, browser launching, and safe item deletion.
 - **Integrated Video & Audio Recording:** Record any selected screen region or window directly into high-quality MP4 (`x264` + `AAC`) with perfect A/V synchronization. Automatic output to `~/Video/flameshot-plus/`.
-- **Pre-Record Floating HUD:** Dedicated 530px floating toolbar. Choose your audio source before recording: System Audio (auto-detects monitor sink including Bluetooth), Microphone, Mixed (System + Mic), or Muted.
-- **Window Snapping (X11):** Instant geometry detection. Double-click or press `W` / `Tab` to snap the selection box to any window under cursor.
-- **Free Anonymous Cloud Upload (0x0.st / Catbox):** Dead Imgur API keys removed. Upload any screenshot with 1-click directly to **0x0.st** with automatic fast fallback to **Catbox.moe**. Direct links copied to clipboard with notifications.
-- **Default WebP Format:** Modern, lightweight screenshot format out of the box.
-- **Build Optimization:** Compiled with `-O3`, `-flto=auto` (Link-Time Optimization), and dead-code elimination (`-Wl,--gc-sections`). Standalone binary is ~**1.6 MB**, `.deb` package is ~**670 KB**.
+- **Pre-Record Floating HUD:** Dedicated floating toolbar. Choose your audio source before recording: System Audio (auto-detects monitor sink including Bluetooth), Microphone, Mixed (System + Mic), or Muted.
+- **Default WebP Format:** Modern, ultra-lightweight screenshot format out of the box.
+- **Build Optimization:** Compiled with `-O3`, `-flto=auto` (Link-Time Optimization), and dead-code elimination (`-Wl,--gc-sections`). Standalone binary is ~**1.7 MB**, `.deb` package is ~**680 KB**.
 - **Debian Policy Compliant:** Package provides, conflicts, and replaces stock `flameshot` for seamless zero-conflict upgrades.
 - **Automated Quality Assurance:** Pre-release automated verification across 10 test suites: cppcheck static analysis, virtual display Xvfb GUI lifecycle, concurrency safety, malformed geometry protection, binary security, zero-error configuration validation, and Debian Policy compliance.
 
