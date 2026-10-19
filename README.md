@@ -1,4 +1,20 @@
-# Flameshot +
+<p align="center">
+  <img src="docs/images/logo.png" alt="Flameshot +" width="160" height="160" />
+</p>
+
+<h1 align="center">Flameshot +</h1>
+
+<p align="center">
+  <strong>Modern, lightweight screen capture, live annotation, EWMH window snapping, integrated audio/video recording, and high-capacity cloud sharing.</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Svarkovsky/flameshot-plus/releases/latest"><img src="https://img.shields.io/github/v/release/Svarkovsky/flameshot-plus?color=blue&label=Release" alt="Latest Release" /></a>
+  <a href="https://github.com/Svarkovsky/flameshot-plus/actions/workflows/package-deb.yml"><img src="https://github.com/Svarkovsky/flameshot-plus/actions/workflows/package-deb.yml/badge.svg" alt="CI Status" /></a>
+  <img src="https://img.shields.io/badge/License-GPLv3-green.svg" alt="License" />
+  <img src="https://img.shields.io/badge/Binary_Size-1.7_MB-brightgreen.svg" alt="Binary Size" />
+  <img src="https://img.shields.io/badge/Deb_Package-724_KB-success.svg" alt="Deb Package Size" />
+</p>
 
 Yes, yes, this is yet another fork of a fork.
 
