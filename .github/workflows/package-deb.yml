@@ -2,10 +2,10 @@ name: Build & Package (Debian 12 .deb)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 'chatbox/**', 'feature/**' ]
     tags: [ 'v*' ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, 'chatbox/**', 'feature/**' ]
   workflow_dispatch:
 
 permissions:
@@ -135,7 +135,7 @@ jobs:
   publish-package:
     name: Publish to GitHub Packages (GHCR)
     needs: build-debian12
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read

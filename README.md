@@ -8,19 +8,39 @@ If you like it, you can build it, use it, and enjoy a faster, fully featured too
 
 ---
 
+## Visual Overview
+
+### 1. Compact Floating Recording HUD & Live Annotation Tools
+<p align="center">
+  <img src="docs/images/img1.webp" alt="Recording Toolbar and Live Tools" width="758" />
+</p>
+
+*Dedicated recording control bar with real-time hardware multi-segment audio VU-meter, live drawing suite (pencil, arrow, line, rectangle, circle, marker, text, step counter, pixelate blur, invert), audio source switcher, resolution indicator, and instant record/stop controls.*
+
+---
+
+### 2. Instant Stream Trimming & High-Capacity Cloud Upload
+<p align="center">
+  <img src="docs/images/img2.webp" alt="Video Preview and Trimming Dialog" width="510" />
+</p>
+
+*Interactive post-recording dialog featuring sub-second instant video trimming (lossless stream-copy without re-encoding), custom block-segmented boundary slider, built-in player launcher, and direct cloud upload up to 1 GB (Catbox / Litterbox).*
+
+---
+
 ## What is New in Flameshot +
 
 - **Integrated Video & Audio Recording:** Record any selected screen area or snapped window directly into high-quality MP4 (`x264` + `AAC`) with perfect A/V synchronization (`aresample=async=1000`). Videos are saved automatically to `~/Video/flameshot-plus/`.
-- **Pre-Record Floating HUD:** A dedicated floating toolbar (530px) that stays out of frame. Choose your audio mode before recording starts:
-  - `System Audio`: Auto-detects active audio sink monitor, including Bluetooth headphones/speakers.
-  - `Microphone`: Records system default input.
-  - `System + Microphone`: Real-time mixed audio stream.
-  - `Muted`: Silent video recording.
-- **Window Snapping (X11):** Instant window geometry detection. Double-click any window (or press `W` / `Tab`) to automatically snap the selection frame to that exact application window.
+- **Live On-Screen Drawing During Recording:** Draw and annotate directly over the video stream while recording. Full toolset includes freehand pencil, arrows, straight lines, rectangles (outline & fill), circles, semi-transparent highlighter, direct text typing, auto-increment step counter badges (1, 2, 3...), dynamic pixelation/blur, color inversion, undo/redo (`Ctrl+Z` / `Ctrl+Shift+Z`), and instant canvas wipe (`C`).
+- **Hardware-Accurate Audio VU-Meter:** Multi-segment real-time VU-meter on the floating HUD providing visual volume level feedback for microphone and system audio.
+- **Sub-Second Lossless Stream Trimming:** Trim video boundaries in under 0.2s using ffmpeg stream-copy (`-c copy`) without CPU-heavy re-encoding or quality degradation. Includes an intuitive block-segmented timeline slider.
+- **High-Capacity Cloud Sharing (up to 1 GB):** Dual-tier cloud uploading with automatic routing: standard Catbox cloud for files up to 200 MB, and high-capacity Litterbox cloud for large recordings up to 1 GB. Features live transfer progress (MB sent / total MB / percentage) and instant clipboard link copying.
+- **In-App Multi-Language Switcher (35 Languages):** Built-in language selector in General Configuration supporting English, Russian, Ukrainian, German, French, Spanish, Italian, Polish, Chinese, Japanese, and 25+ more locales with complete translation coverage.
+- **EWMH Hardware-Accurate Window Snapping:** Window snapping via `_NET_CLIENT_LIST_STACKING` that detects genuine application windows with window manager frames, automatically ignoring Flameshot's own capture overlay.
+- **Enhanced Uploads History:** Robust "Latest Uploads" dialog supporting both screenshots and video recordings with direct URL copying, browser launching, and safe item deletion.
 - **Persistent Area Coordinates:** Selection geometry is automatically saved to `/tmp/screenink_area.env` and `/tmp/screenink_area.txt` for scripting and external tools.
 - **Default WebP Format:** Ultra-lightweight screenshots saved directly in modern WebP format by default.
-- **Free Anonymous Cloud Upload (0x0.st / Catbox):** Dead, rate-limited Imgur integration and API key prompts have been completely removed. Upload any screenshot with 1-click directly to **0x0.st** with seamless automatic fallback to **Catbox.moe**. Direct links are instantly copied to your clipboard with desktop notifications. No registration, zero API keys, no tracking.
-- **Build Optimization:** Compiled with `-O3`, `-flto=auto` (Link-Time Optimization), and linker dead-code elimination (`-Wl,--gc-sections`). Resulting stripped binary is ~**1.6 MB**.
+- **Build Optimization:** Compiled with `-O3`, `-flto=auto` (Link-Time Optimization), and linker dead-code elimination (`-Wl,--gc-sections`). Resulting stripped binary is ~**1.7 MB**.
 
 ---
 
@@ -112,10 +132,13 @@ cmake --build build -j$(nproc)
 
 ### Shortcuts
 
-- `W` or `Tab`: Snap selection to window under cursor
+- `W` or `Tab`: Snap selection to window under cursor (EWMH)
 - Double Click: Snap selection to clicked window
 - `Esc` or `Q`: Stop active recording / close overlay
 - `Space` or `Enter`: Start recording when in ready mode
+- `C`: Clear all live drawings from recording canvas
+- `Ctrl + Z`: Undo last drawing action
+- `Ctrl + Shift + Z`: Redo last drawing action
 
 ---
 
