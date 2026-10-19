@@ -4,7 +4,7 @@ Yes, yes, this is yet another fork of a fork.
 
 I use Flameshot on a daily basis, but was frustrated by its limitations: missing window snapping, lack of native modern WebP output, and zero video/audio recording capability. So I took the codebase starting from commit [`70be63d478a271da549597d69bd4868607c0a395`](https://github.com/flameshot-org/flameshot/commit/70be63d478a271da549597d69bd4868607c0a395) (v12.1.0 release), extended it with the missing features, optimized the build, and had a lot of fun doing it.
 
-If you like it, you can build it, use it, and enjoy a faster, fully featured tool. If this project helps you, feel free to support me!
+If you like it, you can build it, use it, and enjoy a faster, fully featured tool. If you find this project useful, feel free to star the repository and share feedback!
 
 ---
 
@@ -129,8 +129,7 @@ The author of this fork accepts absolutely NO responsibility, liability, or warr
 
 ---
 
-## Sponsor & Donate
+## Fork Author & Maintainer
 
-If you enjoy Flameshot + and want to say thanks:
-- **Sponsor / Donate:** [https://svarkovsky.github.io/donate/](https://svarkovsky.github.io/donate/)
-- Support on GitHub: [@Svarkovsky](https://github.com/Svarkovsky)
+- **Author & Maintainer:** Ivan Svarkovsky ([@Svarkovsky](https://github.com/Svarkovsky))
+- **Repository:** [https://github.com/Svarkovsky/flameshot-plus](https://github.com/Svarkovsky/flameshot-plus)

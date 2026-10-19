@@ -12,8 +12,7 @@ int GlobalValues::buttonBaseSize()
 
 QString GlobalValues::versionInfo()
 {
-    return QStringLiteral("Flameshot + " APP_VERSION " (" FLAMESHOT_GIT_HASH ")"
-                          "\nCompiled with Qt " QT_VERSION_STR);
+    return QStringLiteral("Flameshot + v12.1.0-plus\nFork by Ivan Svarkovsky\nCompiled with Qt " QT_VERSION_STR);
 }
 
 QString GlobalValues::iconPath()

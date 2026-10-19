@@ -55,6 +55,6 @@ void InfoWindow::on_CopyInfoButton_clicked()
 {
     FlameshotDaemon::copyToClipboard(GlobalValues::versionInfo() + "\n" +
                                      generateKernelString() +
-                                     "\nRepository: https://github.com/Svarkovsky/flameshot-plus" +
-                                     "\nSupport: https://svarkovsky.github.io/donate/");
+                                     "\nAuthor: Ivan Svarkovsky" +
+                                     "\nRepository: https://github.com/Svarkovsky/flameshot-plus");
 }
