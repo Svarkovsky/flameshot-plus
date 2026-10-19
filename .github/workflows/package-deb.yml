@@ -109,7 +109,7 @@ jobs:
           cd ..
 
           # Generate structured release notes from template
-          sed "s/\${VERSION}/${{ github.ref_name }}/g" packaging/release_notes.md.template > release_notes.md
+          sed "s#\${VERSION}#${{ github.ref_name }}#g" packaging/release_notes.md.template > release_notes.md
 
       - name: Run Quality Assurance & Integrity Test Suite
         run: |
